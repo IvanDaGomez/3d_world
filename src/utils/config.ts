@@ -1,0 +1,4 @@
+const PHONE_NUMBER = '3123222128'
+const BRAND_NAME = 'Vanguard'
+
+export { PHONE_NUMBER, BRAND_NAME }

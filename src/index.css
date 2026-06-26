@@ -1,111 +1,87 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ─── Brand Identity (extracted directly from logo) ─── */
+  --color-brand-primary:       #1E4FD8;   /* Logo royal blue — shield fill */
+  --color-brand-bright:        #2A5FE8;   /* Electric blue — hover/focus states */
+  --color-brand-glow:          #5C8AFF;   /* Light blue — Three.js particles, glow */
+  --color-brand-black:         #0A0A0A;   /* Logo shield outline & shadow planes */
+  --color-brand-white:         #FFFFFF;   /* Logo arrow highlight planes */
+  --color-brand-link:          #4872FF;   /* Mid blue — links */
+
+  /* ─── Light Mode (Clean Blueprint) ─── */
+  --color-light-background:    #F0F2F8;
+  --color-light-surface:       #FFFFFF;
+  --color-light-border:        #D0D8EE;
+  --color-light-text-primary:  #0D1426;
+  --color-light-text-secondary:#4A5880;
+  --color-light-accent:        #1E4FD8;
+
+  /* ─── Dark Mode (Forge — default) ─── */
+  --color-dark-background:     #080B12;
+  --color-dark-surface:        #0F1520;
+  --color-dark-border:         #1A2440;
+  --color-dark-text-primary:   #E2E8F5;
+  --color-dark-text-secondary: #6A80B0;
+  --color-dark-accent:         #2A5FE8;
+
+  /* ─── Tactical (hero/immersive — near-black + shield blue) ─── */
+  --color-tactical-background: #04060C;
+  --color-tactical-surface:    #0A0F1E;
+  --color-tactical-border:     #121C36;
+  --color-tactical-text-primary:  #C8D4F0;
+  --color-tactical-text-secondary:#4A6090;
+  --color-tactical-accent:     #3D6FFF;
+  --color-tactical-accent-bright: #5C8AFF;
+
+  /* ─── Steel (catalog sections — mid-dark industrial) ─── */
+  --color-steel-background:    #111722;
+  --color-steel-surface:       #18202E;
+  --color-steel-border:        #243050;
+  --color-steel-text-primary:  #D0DCF4;
+  --color-steel-text-secondary:#5A78A8;
+  --color-steel-accent:        #4872FF;
+
+  /* ─── Blueprint (product detail / specs panels) ─── */
+  --color-blueprint-background:#0D1730;
+  --color-blueprint-surface:   #142040;
+  --color-blueprint-border:    #1E3060;
+  --color-blueprint-text-primary:  #B8CCEC;
+  --color-blueprint-text-secondary:#4A6898;
+  --color-blueprint-accent:    #1E4FD8;
+
+  /* ─── Current Theme Variables (default: Forge dark) ─── */
+  --color-current-background:    var(--color-dark-background);
+  --color-current-surface:       var(--color-dark-surface);
+  --color-current-border:        var(--color-dark-border);
+  --color-current-text-primary:  var(--color-dark-text-primary);
+  --color-current-text-secondary:var(--color-dark-text-secondary);
+  --color-current-accent:        var(--color-dark-accent);
+
+  /* ─── Three.js particle ramp (logo blue → bright → fog) ─── */
+  --color-particle-core:       #1E4FD8;   /* Dense center particles */
+  --color-particle-mid:        #3D6FFF;   /* Mid-distance field */
+  --color-particle-edge:       #5C8AFF;   /* Outer haze particles */
+  --color-particle-fog:        #8FB0FF;   /* Scene fog color */
+
+  /* ─── Spacing scale ─── */
+  --spacing-xsmall: calc(0.2rem + 0.1vw);
+  --spacing-small:  calc(var(--spacing-xsmall) * 1.6);
+  --spacing-medium: calc(var(--spacing-small)  * 1.6);
+  --spacing-large:  calc(var(--spacing-medium) * 1.6);
+
+  /* ─── Type scale ─── */
+  --font-size-xsmall: calc(0.15rem + 0.2vw);
+  --font-size-small:  calc(var(--font-size-xsmall) * 1.6);
+  --font-size-medium: calc(var(--font-size-small)  * 1.6);
+
+  --radius-card: calc((0.2rem + 0.1vw) * 1.6 * 1.6);
+}
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--font-size-medium);
+  line-height: 1.5;
+  color: var(--color-current-text-primary);
+  background-color: var(--color-current-background);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
