@@ -1,9 +1,17 @@
 import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 import { motion } from 'framer-motion'
+import { PHONE_NUMBER } from '@/utils/config'
+
 export default function CTASection () {
+  const handleProductClick = () => {
+    const message =
+      '¡Hola! Estoy interesado en sus productos y me gustaría obtener más información.'
+    const encodedMessage = encodeURIComponent(message)
+    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`
+    window.open(whatsappUrl, '_blank')
+  }
   return (
     <section className='pb-32'>
       <Reveal>
@@ -43,7 +51,7 @@ export default function CTASection () {
             />
 
             <div className='relative z-10'>
-              <SectionLabel>LET'S BUILD SOMETHING</SectionLabel>
+              <SectionLabel>CONSTRUYAMOS ALGO</SectionLabel>
 
               <h2
                 className='
@@ -59,7 +67,7 @@ export default function CTASection () {
                   fontFamily: 'var(--font-display)'
                 }}
               >
-                Your next product starts with an
+                Tu próximo producto comienza con una
                 <span
                   style={{
                     color: '#1E4FD8'
@@ -82,8 +90,9 @@ export default function CTASection () {
                   color: '#748BB4'
                 }}
               >
-                Whether you need one personalized gift or thousands of corporate
-                products, we're ready to manufacture it with premium quality.
+                Ya sea que necesites un regalo personalizado o miles de
+                productos corporativos, estamos listos para fabricarlo con
+                calidad premium.
               </p>
 
               <div
@@ -103,8 +112,8 @@ export default function CTASection () {
                     scale: 0.97
                   }}
                 >
-                  <Link
-                    to='/contact'
+                  <motion.button
+                    onClick={() => handleProductClick()}
                     className='
                         inline-flex
                         items-center
@@ -119,32 +128,10 @@ export default function CTASection () {
                       color: 'white'
                     }}
                   >
-                    Start Your Project
+                    Comienza tu proyecto
                     <ArrowRight size={18} />
-                  </Link>
+                  </motion.button>
                 </motion.div>
-
-                <motion.button
-                  whileHover={{
-                    scale: 1.03
-                  }}
-                  whileTap={{
-                    scale: 0.97
-                  }}
-                  className='
-                      px-8
-                      h-14
-                      rounded-xl
-                      font-semibold
-                    '
-                  style={{
-                    background: '#0E162D',
-                    border: '1px solid #223760',
-                    color: '#DCE7F8'
-                  }}
-                >
-                  Download Catalog
-                </motion.button>
               </div>
             </div>
           </div>

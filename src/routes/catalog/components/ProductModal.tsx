@@ -207,6 +207,14 @@ export default function ProductModal ({ product, onClose }: ProductModalProps) {
                     >
                       COP
                     </span>
+                    {product.minimum && (
+                      <span
+                        className='pb-1 text-sm font-semibold'
+                        style={{ color: '#647BA5' }}
+                      >
+                        (Mínimo {product.minimum} unidades)
+                      </span>
+                    )}
                   </div>
                 </div>
 

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './routes/main/main'
 import Layout from './components/Layout'
 import Catalog from './routes/catalog/Catalog'
+import NotFound from './routes/catalog/components/Error'
 
 export default function App () {
   return (
@@ -14,6 +15,7 @@ export default function App () {
           <Route index element={<Home />} />
           <Route path='catalog' element={<Catalog />} />
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )

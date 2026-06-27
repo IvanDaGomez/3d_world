@@ -131,7 +131,7 @@ export default function HeroSection ({
 
           {/* CATEGORY PILLS */}
 
-          <motion.div
+          {/* <motion.div
             variants={cardVariant}
             className='flex gap-3 mt-8 overflow-x-auto pb-2'
           >
@@ -173,7 +173,7 @@ export default function HeroSection ({
                 </motion.button>
               )
             })}
-          </motion.div>
+          </motion.div> */}
         </motion.div>
       </div>
     </section>

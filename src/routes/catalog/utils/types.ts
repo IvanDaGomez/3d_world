@@ -8,13 +8,20 @@ interface Product {
 
   image: string
 
-  category: 'NFC' | 'Business' | 'Home' | 'Gift' | 'Decoration' | 'Custom'
+  category:
+    | 'NFC'
+    | 'Empresas'
+    | 'Hogar'
+    | 'Regalos'
+    | 'Decoración'
+    | 'Personalizado'
 
   featured?: boolean
 
   isNew?: boolean
 
   popular?: boolean
+  minimum?: number
 }
 
 interface Collection {

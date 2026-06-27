@@ -15,7 +15,7 @@ export default function CollectionSection ({
   setSelectedProduct: React.Dispatch<React.SetStateAction<Product | null>>
 }) {
   return (
-    <section className='pb-32'>
+    <section className='pb-4'>
       {COLLECTIONS.map(collection => {
         /* Apply search/category filtering */
 
@@ -34,7 +34,7 @@ export default function CollectionSection ({
         if (products.length === 0) return null
 
         return (
-          <Reveal key={collection.id} className='mb-28'>
+          <Reveal key={collection.id} className='mb-4'>
             {/* ===========================================
                   SECTION HEADER
               =========================================== */}
@@ -195,8 +195,8 @@ export default function CollectionSection ({
                                   gap-2
                                 '
                               style={{
-                                background: 'rgba(30,79,216,.18)',
-                                color: '#9CC2FF'
+                                background: 'rgba(30,79,216,.58)',
+                                color: 'white'
                               }}
                             >
                               <Star size={13} />
@@ -211,14 +211,18 @@ export default function CollectionSection ({
                                   h-8
                                   rounded-full
                                   text-xs
+
                                   font-semibold
+                                  flex
+                                  items-center
+                                  gap-2
                                 '
                               style={{
-                                background: 'rgba(255,255,255,.08)',
+                                background: 'rgba(0,0,0,.8)',
                                 color: '#fff'
                               }}
                             >
-                              Featured
+                              Destacado
                             </span>
                           )}
                         </div>{' '}

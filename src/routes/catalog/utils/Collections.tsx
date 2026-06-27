@@ -13,11 +13,11 @@ const COLLECTIONS: Collection[] = [
 
   {
     id: 'nfc',
-    title: 'Soluciones NFC',
+    title: 'Soluciones Tecnología Inalámbrica',
     subtitle: 'Productos inteligentes para negocios modernos',
     icon: Smartphone,
     products: PRODUCTS.filter(
-      p => p.category === 'NFC' || p.category === 'Business'
+      p => p.category === 'NFC' || p.category === 'Empresas'
     )
   },
 
@@ -27,7 +27,7 @@ const COLLECTIONS: Collection[] = [
     subtitle: 'Piezas minimalistas creadas con precisión',
     icon: Home,
     products: PRODUCTS.filter(
-      p => p.category === 'Home' || p.category === 'Decoration'
+      p => p.category === 'Hogar' || p.category === 'Decoración'
     )
   },
 
@@ -36,7 +36,7 @@ const COLLECTIONS: Collection[] = [
     title: 'Ideas de Regalo',
     subtitle: 'Detalles únicos que realmente recordarán',
     icon: Gift,
-    products: PRODUCTS.filter(p => p.category === 'Gift')
+    products: PRODUCTS.filter(p => p.category === 'Regalos')
   },
 
   {
@@ -44,7 +44,7 @@ const COLLECTIONS: Collection[] = [
     title: 'Fabricación a Medida',
     subtitle: 'Hecho exactamente como lo imaginas',
     icon: Building2,
-    products: PRODUCTS.filter(p => p.category === 'Custom')
+    products: PRODUCTS.filter(p => p.category === 'Personalizado')
   }
 ]
 
