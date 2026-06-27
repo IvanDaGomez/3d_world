@@ -4,6 +4,7 @@ import './index.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './routes/main/main'
 import Layout from './components/Layout'
+import Catalog from './routes/catalog/Catalog'
 
 export default function App () {
   return (
@@ -11,6 +12,7 @@ export default function App () {
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path='catalog' element={<Catalog />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import Header from '@/components/Header'
-// import Footer from '@/components/Footer'
+import Footer from '@/components/Footer'
 
 export default function Layout () {
   const [isNavHidden, setIsNavHidden] = useState(false)
@@ -35,7 +35,7 @@ export default function Layout () {
         initial={{ y: 0 }}
         animate={{ y: isNavHidden ? -80 : 0 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className='z-10000 w-full'
+        className='z-10000 w-full h-20'
       >
         <Header />
       </motion.div>
@@ -46,7 +46,7 @@ export default function Layout () {
       </main>
 
       {/* Footer */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   )
 }

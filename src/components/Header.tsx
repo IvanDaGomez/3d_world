@@ -70,7 +70,7 @@ export default function Header () {
               <img src='/logo.png' alt='' className='w-8' />
             </div>
             <span
-              className='text-base font-bold text-white tracking-tight uppercase'
+              className='text-base font-bold text-white tracking-tight'
               style={{ fontFamily: 'var(--font-display)' }}
             >
               {BRAND_NAME}

@@ -5,8 +5,6 @@ import {
   ArrowRight,
   Layers,
   Zap,
-  Shield,
-  Settings2,
   Package,
   Clock,
   ChevronDown,
@@ -14,7 +12,7 @@ import {
 } from 'lucide-react'
 import HeroScene from '@/components/HeroScene'
 import WhatsAppFAB from '@/components/WhatsAppFAB'
-import { PHONE_NUMBER, BRAND_NAME } from '@/utils/config'
+import { PHONE_NUMBER } from '@/utils/config'
 // ─────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────
@@ -84,68 +82,46 @@ function Reveal ({
 // ─────────────────────────────────────────────────────────────
 const STATS = [
   { value: '+500', label: 'Piezas entregadas' },
-  { value: '48 h', label: 'Entrega estándar' },
-  { value: '6', label: 'Materiales disponibles' },
-  { value: '100%', label: 'Satisfacción garantizada' }
+  { value: '100%', label: 'Satisfacción garantizada' },
+  { value: '48h', label: 'Entrega en Colombia' },
+  { value: '2h', label: 'Cotización rápida' }
 ]
 
 const FEATURES = [
   {
     icon: Zap,
-    title: 'Entrega en 48 h',
-    body: 'Prototipos listos en 24–48 horas. Corridas de producción con tiempos acordados desde el primer mensaje.'
+    title: 'Entrega a todo el país',
+    body: 'Prototipos listos para toda Colombia. Envíos nacionales con seguimiento y seguro incluido.'
   },
   {
     icon: Layers,
-    title: 'Multi-material',
-    body: 'PLA, ABS, PETG, TPU, Resina y Nylon. Seleccionamos el material óptimo para cada aplicación.'
-  },
-  {
-    icon: Settings2,
-    title: 'Tolerancias de ingeniería',
-    body: 'Capas desde 0.1 mm y tolerancias de ±0.2 mm. Piezas funcionales que encajan a la primera.'
-  },
-  {
-    icon: Shield,
-    title: 'Calidad garantizada',
-    body: 'Cada pieza pasa inspección dimensional antes de salir del taller. Sin sorpresas al recibir.'
+    title: 'Amplio catálogo',
+    body: 'Personaliza tus piezas (imanes, llaveros, lámparas) o elige entre los modelos disponibles.'
   },
   {
     icon: Package,
     title: 'Desde 1 unidad',
-    body: 'Una pieza o mil. Producción one-off para prototipos y series cortas hasta corridas de alta demanda.'
-  },
-  {
-    icon: Clock,
-    title: 'Cotización en 2 h',
-    body: 'Comparte tu archivo o describe la pieza. En menos de dos horas tienes precio y tiempo exacto.'
+    body: 'Una pieza o cientos. Fabricamos experiencias, momentos y productos empresariales con la misma calidad y atención al detalle.'
   }
 ]
 
 const PROCESS = [
   {
     step: '01',
-    title: 'Envía tu diseño',
-    body: 'Comparte tu archivo STL, STEP o describe tu necesidad por WhatsApp. Sin burocracia.'
+    title: 'Contáctanos',
+    body: 'Envíanos tu producto deseado desde nuestro catálogo o tu propia idea.'
   },
   {
     step: '02',
     title: 'Cotizamos',
-    body: 'En menos de 2 horas recibes precio, material recomendado y tiempo de entrega.'
+    body: 'Te respondemos con la mayor calidad y rapidez.'
   },
   {
     step: '03',
-    title: 'Imprimimos',
-    body: 'Tu pieza se fabrica con control de calidad en cada capa. Te notificamos el avance.'
-  },
-  {
-    step: '04',
     title: 'Lo recibes',
-    body: 'Entrega a domicilio en Colombia o recoge en taller. Garantía de reimpresión incluida.'
+    body: 'Entrega a domicilio en Colombia. Garantía de reimpresión incluida.'
   }
 ]
-
-const MATERIALS = ['PLA', 'ABS', 'PETG', 'TPU', 'Resina', 'Nylon']
 
 // ─────────────────────────────────────────────────────────────
 // Shared micro-components
@@ -267,24 +243,6 @@ export default function Landing () {
           initial='hidden'
           animate='visible'
         >
-          {/* Eyebrow pill */}
-          <motion.div variants={cardVariant} className='mb-8'>
-            <span
-              className='
-              inline-flex items-center gap-2
-              px-3.5 py-1.5 rounded-full
-              border border-[#1A2440] bg-[#0A0F1E]/80 backdrop-blur-sm
-              text-[#5C8AFF] text-[11px] font-bold uppercase tracking-[0.16em]
-            '
-            >
-              <span
-                className='w-1.5 h-1.5 rounded-full bg-[#2A5FE8] animate-pulse'
-                aria-hidden='true'
-              />
-              Impresión 3D profesional · Colombia
-            </span>
-          </motion.div>
-
           {/* Headline */}
           <motion.h1
             variants={cardVariant}
@@ -320,9 +278,9 @@ export default function Landing () {
             className='text-lg sm:text-xl max-w-2xl leading-relaxed mb-10'
             style={{ color: '#6A80B0' }}
           >
-            Fabricamos prototipos, piezas funcionales y series de producción con
-            tecnología FDM y resina. Calidad de ingeniería, respuesta en 2
-            horas, entrega en 48 horas.
+            Diseñamos, fabricamos y entregamos piezas personalizadas para
+            empresas y particulares. Desde prototipos hasta productos finales,
+            con la mejor calidad y rapidez.
           </motion.p>
 
           {/* CTAs */}
@@ -343,7 +301,7 @@ export default function Landing () {
                   shadow-xl shadow-[#1E4FD8]/30
                 '
               >
-                Ver catálogo 3D
+                Ver catálogo
                 <ArrowRight
                   size={16}
                   className='group-hover:translate-x-0.5 transition-transform duration-150'
@@ -421,17 +379,10 @@ export default function Landing () {
       ════════════════════════════════════════════════════ */}
       <section className='max-w-6xl mx-auto px-6 py-28'>
         <Reveal className='text-center mb-14'>
-          <SectionLabel>Por qué elegirnos</SectionLabel>
           <SectionHeading>
-            Manufactura digital <Accent>sin límites</Accent>
+            Diseño, entretenimiento y personalización{' '}
+            <Accent>sin límites</Accent>
           </SectionHeading>
-          <p
-            className='mt-4 text-base max-w-xl mx-auto leading-relaxed'
-            style={{ color: '#6A80B0' }}
-          >
-            Desde el primer prototipo hasta corridas de producción. Velocidad,
-            precisión y asesoría directa en cada pedido.
-          </p>
         </Reveal>
 
         <motion.div
@@ -508,12 +459,12 @@ export default function Landing () {
           <Reveal className='text-center mb-16'>
             <SectionLabel>Proceso</SectionLabel>
             <SectionHeading>
-              De tu idea a tus manos <Accent>en 4 pasos</Accent>
+              De tu idea a tus manos <Accent>en {PROCESS.length} pasos</Accent>
             </SectionHeading>
           </Reveal>
 
           <motion.div
-            className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${PROCESS.length} gap-8`}
             variants={staggerContainer}
             initial='hidden'
             whileInView='visible'
@@ -578,125 +529,6 @@ export default function Landing () {
           </motion.div>
         </div>
       </section>
-
-      {/* ════════════════════════════════════════════════════
-          MATERIALS STRIP
-      ════════════════════════════════════════════════════ */}
-      <section
-        className='border-y border-[#1A2440] py-12 px-6'
-        style={{ background: '#0A0F1E' }}
-      >
-        <Reveal>
-          <div className='max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5'>
-            <p
-              className='text-[11px] font-bold uppercase tracking-[0.16em] shrink-0'
-              style={{ color: '#4A6090' }}
-            >
-              Materiales disponibles
-            </p>
-
-            <div className='flex flex-wrap gap-2.5 justify-center sm:justify-end'>
-              {MATERIALS.map(m => (
-                <motion.span
-                  key={m}
-                  whileHover={{ borderColor: '#1E4FD8', color: '#5C8AFF' }}
-                  className='
-                    px-3.5 py-1.5 rounded-md
-                    border border-[#1A2440]
-                    text-[11px] font-bold uppercase tracking-wider
-                    cursor-default
-                    transition-colors duration-200
-                  '
-                  style={{ color: '#4A6890', background: '#080B12' }}
-                >
-                  {m}
-                </motion.span>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ════════════════════════════════════════════════════
-          CATALOG CTA BANNER
-      ════════════════════════════════════════════════════ */}
-      <section className='max-w-6xl mx-auto px-6 py-24'>
-        <Reveal>
-          <div
-            className='
-            relative overflow-hidden rounded-2xl
-            border border-[#1A2440]
-            bg-[#0A0F1E]
-            px-8 py-16 sm:px-16 sm:py-20
-            text-center
-          '
-          >
-            {/* Grid bg */}
-            <div
-              aria-hidden='true'
-              className='absolute inset-0 opacity-[0.035] pointer-events-none'
-              style={{
-                backgroundImage: [
-                  'linear-gradient(rgba(30,79,216,1) 1px, transparent 1px)',
-                  'linear-gradient(90deg, rgba(30,79,216,1) 1px, transparent 1px)'
-                ].join(', '),
-                backgroundSize: '52px 52px'
-              }}
-            />
-            {/* Glow orb */}
-            <div
-              aria-hidden='true'
-              className='absolute inset-0 pointer-events-none'
-              style={{
-                background:
-                  'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(30,79,216,0.12) 0%, transparent 70%)'
-              }}
-            />
-
-            <div className='relative z-10'>
-              <SectionLabel>Catálogo completo</SectionLabel>
-              <SectionHeading>
-                Explora lo que <Accent>podemos fabricar</Accent>
-              </SectionHeading>
-              <p
-                className='mt-4 text-base sm:text-lg max-w-lg mx-auto leading-relaxed mb-10'
-                style={{ color: '#6A80B0' }}
-              >
-                Cada modelo en el catálogo incluye un visor 3D interactivo,
-                especificaciones de material y precio referencial.
-              </p>
-
-              <div className='flex flex-col sm:flex-row gap-3 justify-center items-center'>
-                <motion.div
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  <Link
-                    to='/catalog'
-                    className='
-                      group inline-flex items-center gap-2
-                      px-8 py-4 rounded-lg
-                      bg-[#1E4FD8] hover:bg-[#2A5FE8] text-white
-                      font-semibold text-base
-                      transition-colors duration-200
-                      shadow-xl shadow-[#1E4FD8]/30
-                    '
-                  >
-                    Ver catálogo completo
-                    <ArrowRight
-                      size={16}
-                      className='group-hover:translate-x-0.5 transition-transform'
-                    />
-                  </Link>
-                </motion.div>
-
-                <WAButton size='lg' label='Pedir cotización' />
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
       {/* ════════════════════════════════════════════════════
           CONTACT
       ════════════════════════════════════════════════════ */}
@@ -720,10 +552,6 @@ export default function Landing () {
             </p>
 
             <WAButton size='lg' label='Escríbenos en WhatsApp' />
-
-            <p className='mt-4 text-xs' style={{ color: '#2D3F60' }}>
-              También puedes enviarnos tu archivo STL o STEP directo al chat.
-            </p>
           </Reveal>
 
           {/* Info cards */}
@@ -733,7 +561,8 @@ export default function Landing () {
                 {
                   icon: Clock,
                   label: 'Horario de atención',
-                  value: 'Lun – Vie 8 a.m. – 6 p.m. · Sáb 9 a.m. – 1 p.m.'
+                  value:
+                    'Disponible de lunes a viernes, de 9:00 a.m. a 6:00 p.m.'
                 },
                 {
                   icon: MessageCircle,
@@ -780,47 +609,6 @@ export default function Landing () {
           </Reveal>
         </div>
       </section>
-
-      {/* ════════════════════════════════════════════════════
-          FOOTER
-      ════════════════════════════════════════════════════ */}
-      <footer
-        className='border-t border-[#0F1A30] px-6 py-8'
-        style={{ background: '#04060C' }}
-      >
-        <div className='max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4'>
-          {/* Brand */}
-          <div className='flex items-center gap-2.5'>
-            <div
-              className='w-7 h-7 rounded-md bg-white flex items-center justify-center shrink-0'
-              aria-hidden='true'
-            >
-              <img src='/logo.png' alt='' className='w-8' />
-            </div>
-            <span
-              className='text-sm font-semibold text-white'
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              {BRAND_NAME}
-            </span>
-          </div>
-
-          <p className='text-xs' style={{ color: '#2D3F60' }}>
-            © {new Date().getFullYear()} {BRAND_NAME} · Impresión 3D profesional
-            · Colombia
-          </p>
-
-          <a
-            href={WA_HREF}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-xs transition-colors duration-150 hover:text-[#5C8AFF]'
-            style={{ color: '#2D3F60' }}
-          >
-            WhatsApp →
-          </a>
-        </div>
-      </footer>
 
       {/* Persistent WhatsApp FAB */}
       <WhatsAppFAB />
