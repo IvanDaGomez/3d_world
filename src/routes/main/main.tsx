@@ -13,6 +13,7 @@ import {
 import HeroScene from '@/components/HeroScene'
 import WhatsAppFAB from '@/components/WhatsAppFAB'
 import { PHONE_NUMBER } from '@/utils/config'
+import { cardVariant, fadeUp, stagger } from '../catalog/ui/variants'
 // ─────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────
@@ -21,33 +22,6 @@ const WA_MESSAGE =
 const WA_HREF = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
   WA_MESSAGE
 )}`
-
-// ─────────────────────────────────────────────────────────────
-// Animation variants
-// ─────────────────────────────────────────────────────────────
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }
-  })
-}
-
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } }
-}
-
-const cardVariant = {
-  hidden: { opacity: 0, y: 24, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-  }
-}
 
 // ─────────────────────────────────────────────────────────────
 // Scroll-triggered wrapper
@@ -239,7 +213,7 @@ export default function Landing () {
         {/* ── Content ── */}
         <motion.div
           className='relative z-10 max-w-4xl mx-auto flex flex-col items-center'
-          variants={staggerContainer}
+          variants={stagger}
           initial='hidden'
           animate='visible'
         >
@@ -345,7 +319,7 @@ export default function Landing () {
       >
         <motion.div
           className='max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4'
-          variants={staggerContainer}
+          variants={stagger}
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true, margin: '-50px' }}
@@ -387,7 +361,7 @@ export default function Landing () {
 
         <motion.div
           className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
-          variants={staggerContainer}
+          variants={stagger}
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true, margin: '-60px' }}
@@ -465,7 +439,7 @@ export default function Landing () {
 
           <motion.div
             className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${PROCESS.length} gap-8`}
-            variants={staggerContainer}
+            variants={stagger}
             initial='hidden'
             whileInView='visible'
             viewport={{ once: true, margin: '-60px' }}

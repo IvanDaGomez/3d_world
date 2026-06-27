@@ -1,23 +1,6 @@
 import { useInView, motion } from 'framer-motion'
 import { useRef } from 'react'
-
-const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 40
-  },
-
-  visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-
-    transition: {
-      duration: 0.65,
-      delay,
-      ease: [0.22, 1, 0.36, 1]
-    }
-  })
-}
+import { fadeUp } from '../ui/variants'
 
 export default function Reveal ({
   children,
