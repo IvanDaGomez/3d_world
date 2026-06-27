@@ -9,9 +9,7 @@ function Accent ({ children }: { children: React.ReactNode }) {
 export default function HeroSection ({
   setFilterOpen,
   search,
-  setSearch,
-  selectedCategory,
-  setSelectedCategory
+  setSearch
 }: {
   setFilterOpen: (open: boolean) => void
   search: string
