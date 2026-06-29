@@ -4,7 +4,8 @@ import SectionHeading from '../components/SectionHeading'
 import type { Product } from '../utils/types'
 import { motion } from 'framer-motion'
 import { cardVariant, stagger } from '../ui/variants'
-import { ArrowRight, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
+
 export default function CollectionSection ({
   search,
   selectedCategory,
@@ -18,7 +19,6 @@ export default function CollectionSection ({
     <section className='pb-4'>
       {COLLECTIONS.map(collection => {
         /* Apply search/category filtering */
-
         const products = collection.products.filter(product => {
           const matchesSearch =
             search.trim() === '' ||
@@ -38,12 +38,10 @@ export default function CollectionSection ({
             {/* ===========================================
                   SECTION HEADER
               =========================================== */}
-
             <div className='max-w-7xl mx-auto px-6 mb-10'>
               <div className='flex items-end justify-between gap-6'>
                 <div>
                   <SectionHeading>{collection.title}</SectionHeading>
-
                   <p
                     className='mt-3 max-w-2xl text-lg'
                     style={{
@@ -53,32 +51,12 @@ export default function CollectionSection ({
                     {collection.subtitle}
                   </p>
                 </div>
-
-                {/* <motion.button
-                  whileHover={{
-                    x: 4
-                  }}
-                  className='
-                      hidden
-                      md:flex
-                      items-center
-                      gap-2
-                      font-semibold
-                    '
-                  style={{
-                    color: '#78A8FF'
-                  }}
-                >
-                  Explorar Colección
-                  <ArrowRight size={17} />
-                </motion.button> */}
               </div>
             </div>
 
             {/* ===========================================
                   PRODUCT ROW
               =========================================== */}
-
             <div
               className='
                   overflow-x-auto
@@ -116,251 +94,113 @@ export default function CollectionSection ({
                         group
                         shrink-0
                         w-[330px]
+                        cursor-pointer
                       '
                   >
                     {/* =======================================
-                          PRODUCT CARD
+                          PRODUCT CARD (Image Only)
                       ======================================= */}
-
                     <div
                       className='
+                          relative
+                          w-full
+                          aspect-square
                           rounded-[30px]
                           overflow-hidden
                           transition-all
                           duration-500
-                          h-full
                         '
                       style={{
                         background: '#0A0F1E',
                         border: '1px solid #1A2440'
                       }}
                     >
-                      {/* IMAGE */}
-
+                      {/* Glow Overlay */}
                       <div
                         className='
-                            relative
-                            h-[270px]
-                            overflow-hidden
+                            absolute
+                            inset-0
+                            z-10
+                            opacity-0
+                            group-hover:opacity-100
+                            transition-opacity
+                            duration-500
+                            pointer-events-none
+                          '
+                        style={{
+                          background:
+                            'radial-gradient(circle at center, rgba(30,79,216,.15), transparent 70%)'
+                        }}
+                      />
+
+                      {/* Product Image */}
+                      <img
+                        src={product.images[0]}
+                        alt={product.title}
+                        className='
+                            w-full
+                            h-full
+                            object-cover
+                            transition-transform
+                            duration-700
+                            group-hover:scale-110
+                          '
+                      />
+
+                      {/* TOP BADGES */}
+                      <div
+                        className='
+                            absolute
+                            top-5
+                            left-5
+                            z-20
+                            flex
+                            gap-2
+                            flex-wrap
                           '
                       >
-                        {/* Glow */}
-                        <div
-                          className='
-                              absolute
-                              inset-0
-                              opacity-0
-                              group-hover:opacity-100
-                              transition-opacity
-                              duration-500
-                            '
-                          style={{
-                            background:
-                              'radial-gradient(circle at center, rgba(30,79,216,.22), transparent 70%)'
-                          }}
-                        />
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className='
-                              w-full
-                              h-full
-                              object-cover
-                              transition-transform
-                              duration-700
-                              group-hover:scale-110
-                            '
-                        />
-                        {/* TOP BADGES */}
-                        <div
-                          className='
-                              absolute
-                              top-5
-                              left-5
-                              flex
-                              gap-2
-                              flex-wrap
-                            '
-                        >
-                          {product.popular && (
-                            <span
-                              className='
-                                  px-3
-                                  h-8
-                                  rounded-full
-                                  text-xs
-                                  font-semibold
-                                  flex
-                                  items-center
-                                  gap-2
-                                '
-                              style={{
-                                background: 'rgba(30,79,216,.58)',
-                                color: 'white'
-                              }}
-                            >
-                              <Star size={13} />
-                              Popular
-                            </span>
-                          )}
-
-                          {product.featured && (
-                            <span
-                              className='
-                                  px-3
-                                  h-8
-                                  rounded-full
-                                  text-xs
-
-                                  font-semibold
-                                  flex
-                                  items-center
-                                  gap-2
-                                '
-                              style={{
-                                background: 'rgba(0,0,0,.8)',
-                                color: '#fff'
-                              }}
-                            >
-                              Destacado
-                            </span>
-                          )}
-                        </div>{' '}
-                        {/* =======================================
-                            CONTENT
-                        ======================================= */}
-                        <div className='p-7'>
-                          {/* Category */}
-
-                          <p
+                        {product.popular && (
+                          <span
                             className='
-                              uppercase
-                              tracking-[0.18em]
-                              text-[11px]
-                              font-bold
-                              mb-3
-                            '
-                            style={{
-                              color: '#4D8CFF'
-                            }}
-                          >
-                            {product.subtitle}
-                          </p>
-
-                          {/* Title */}
-
-                          <h3
-                            className='
-                              text-2xl
-                              font-black
-                              leading-tight
-                            '
-                            style={{
-                              color: '#E2E8F5',
-                              fontFamily: 'var(--font-display)'
-                            }}
-                          >
-                            {product.title}
-                          </h3>
-
-                          {/* Description */}
-
-                          <p
-                            className='mt-4 leading-7'
-                            style={{
-                              color: '#6D82A8'
-                            }}
-                          >
-                            {product.description}
-                          </p>
-
-                          {/* Divider */}
-
-                          <div
-                            className='my-7 h-px'
-                            style={{
-                              background: '#1A2440'
-                            }}
-                          />
-
-                          {/* Bottom */}
-
-                          <div className='flex items-center justify-between'>
-                            <div>
-                              <p
-                                className='text-xs uppercase tracking-wider'
-                                style={{
-                                  color: '#61779F'
-                                }}
-                              >
-                                Starting at
-                              </p>
-
-                              <div
-                                className='text-3xl font-black mt-1'
-                                style={{
-                                  color: '#E2E8F5'
-                                }}
-                              >
-                                ${product.price.toLocaleString()}
-                              </div>
-                            </div>
-
-                            <motion.button
-                              whileHover={{
-                                x: 5
-                              }}
-                              whileTap={{
-                                scale: 0.97
-                              }}
-                              className='
-                                group/button
-                                w-14
-                                h-14
-                                rounded-2xl
+                                px-3
+                                h-8
+                                rounded-full
+                                text-xs
+                                font-semibold
                                 flex
                                 items-center
-                                justify-center
+                                gap-2
                               '
-                              style={{
-                                background: '#101A34',
-                                border: '1px solid #233862'
-                              }}
-                            >
-                              <ArrowRight
-                                size={18}
-                                color='#E2E8F5'
-                                className='
-                                  transition-transform
-                                  duration-300
-                                  group-hover/button:translate-x-1
-                                '
-                              />
-                            </motion.button>
-                          </div>
-                        </div>
-                        {/* Hover Accent */}
-                        <motion.div
-                          className='
-                            absolute
-                            inset-x-0
-                            top-0
-                            h-[3px]
-                            origin-left
-                          '
-                          initial={{
-                            scaleX: 0
-                          }}
-                          whileHover={{
-                            scaleX: 1
-                          }}
-                          transition={{
-                            duration: 0.35
-                          }}
-                          style={{
-                            background: 'linear-gradient(90deg,#1E4FD8,#67A7FF)'
-                          }}
-                        />
+                            style={{
+                              background: 'rgba(30,79,216,.58)',
+                              color: 'white'
+                            }}
+                          >
+                            <Star size={13} />
+                            Popular
+                          </span>
+                        )}
+
+                        {product.featured && (
+                          <span
+                            className='
+                                px-3
+                                h-8
+                                rounded-full
+                                text-xs
+                                font-semibold
+                                flex
+                                items-center
+                                gap-2
+                              '
+                            style={{
+                              background: 'rgba(0,0,0,.8)',
+                              color: '#fff'
+                            }}
+                          >
+                            Destacado
+                          </span>
+                        )}
                       </div>
                     </div>
                   </motion.div>

@@ -191,7 +191,7 @@ export default function FeaturedProductSection ({
   '
             >
               <motion.div
-                key={featured.image}
+                key={featured.images[0]}
                 initial={{
                   opacity: 0,
                   scale: 0.92
@@ -210,14 +210,14 @@ export default function FeaturedProductSection ({
                   className='
                     relative
                     w-full
-                    h-full
+                    aspect-square
                     min-h-[400px]
                     rounded-[28px]
                     overflow-hidden
                   '
                 >
                   <img
-                    src={featured.image}
+                    src={featured.images[0]}
                     alt={featured.title}
                     className='
                       absolute

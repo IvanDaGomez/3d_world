@@ -6,7 +6,7 @@ interface Product {
 
   price: number
 
-  image: string
+  images: string[]
 
   category:
     | 'NFC'
