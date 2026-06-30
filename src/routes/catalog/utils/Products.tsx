@@ -128,9 +128,28 @@ const PRODUCTS: Product[] = [
     subtitle: 'Colección Decoración',
     description:
       'Arte de pared personalizado para darle un toque único a tu espacio. El precio varía según el tamaño y la complejidad del diseño, asegurando que cada pieza sea única y especial.',
-    price: 49900,
+    minPrice: 49900,
+    maxPrice: 149900,
     images: ['/products/Wall art.png'],
     category: 'Decoración',
+    featured: true
+  },
+  {
+    id: 12,
+    title: 'Letra Joyero Personalizado',
+    subtitle: 'Colección Regalos',
+    description:
+      'Regala esta letra para una ocasión especial. Personaliza la letra con el nombre de tu ser querido y crea un regalo único e inolvidable que se convertirá después de la ocasión en un joyero.',
+    minPrice: 99000,
+    maxPrice: 149000,
+    images: [
+      '/products/Letter Gift 1.png',
+      '/products/Letter Gift 2.png',
+      '/products/Letter Gift 3.png',
+      '/products/Letter Gift 4.png',
+      '/products/Letter Gift 5.png'
+    ],
+    category: 'Regalos',
     featured: true
   }
   // {

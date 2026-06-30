@@ -2,6 +2,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import type { Product } from '../utils/types'
 import { motion } from 'framer-motion'
+import { formatPrice } from '../utils/formatPrice'
 export default function FeaturedProductSection ({
   searching,
   featured,
@@ -133,7 +134,7 @@ export default function FeaturedProductSection ({
                       color: '#E2E8F5'
                     }}
                   >
-                    ${featured.price.toLocaleString()}
+                    ${formatPrice(featured)}
                   </span>
 
                   <span

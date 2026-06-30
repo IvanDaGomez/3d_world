@@ -12,6 +12,13 @@ const COLLECTIONS: Collection[] = [
   },
 
   {
+    id: 'gift',
+    title: 'Ideas de Regalo',
+    subtitle: 'Detalles únicos que realmente recordarán',
+    icon: Gift,
+    products: PRODUCTS.filter(p => p.category === 'Regalos')
+  },
+  {
     id: 'nfc',
     title: 'Soluciones Tecnología Inalámbrica',
     subtitle: 'Productos inteligentes para negocios modernos',
@@ -30,15 +37,6 @@ const COLLECTIONS: Collection[] = [
       p => p.category === 'Hogar' || p.category === 'Decoración'
     )
   },
-
-  {
-    id: 'gift',
-    title: 'Ideas de Regalo',
-    subtitle: 'Detalles únicos que realmente recordarán',
-    icon: Gift,
-    products: PRODUCTS.filter(p => p.category === 'Regalos')
-  },
-
   {
     id: 'custom',
     title: 'Fabricación a Medida',

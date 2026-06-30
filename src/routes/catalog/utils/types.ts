@@ -3,8 +3,9 @@ interface Product {
   title: string
   subtitle: string
   description: string
-
-  price: number
+  minPrice?: number
+  maxPrice?: number
+  price?: number
 
   images: string[]
 

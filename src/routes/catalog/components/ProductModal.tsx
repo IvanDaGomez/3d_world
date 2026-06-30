@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { X, Flame, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react'
 import useGetPremiumGuarantees from '../utils/useGetPremiumGuarantees'
 import { PHONE_NUMBER } from '@/utils/config'
+import { formatPrice } from '../utils/formatPrice'
 
 interface ProductModalProps {
   product: Product | null
@@ -289,7 +290,7 @@ export default function ProductModal ({ product, onClose }: ProductModalProps) {
                       className='text-4xl font-black'
                       style={{ color: '#E2E8F5' }}
                     >
-                      ${product.price.toLocaleString()}
+                      ${formatPrice(product)}
                     </span>
                     <span
                       className='pb-1 text-sm font-semibold'
