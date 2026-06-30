@@ -14,7 +14,7 @@ const COLLECTIONS: Collection[] = [
   {
     id: 'gift',
     title: 'Ideas de Regalo',
-    subtitle: 'Detalles únicos que realmente recordarán',
+    subtitle: 'Sorprende a tus seres queridos con un regalo único',
     icon: Gift,
     products: PRODUCTS.filter(p => p.category === 'Regalos')
   },
