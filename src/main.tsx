@@ -6,6 +6,7 @@ import Home from './routes/main/main'
 import Layout from './components/Layout'
 import Catalog from './routes/catalog/Catalog'
 import NotFound from './routes/catalog/components/Error'
+import PaymentResponse from './routes/paymentResponse/PaymentResponse'
 
 export default function App () {
   return (
@@ -13,6 +14,7 @@ export default function App () {
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path='pagos/respuesta' element={<PaymentResponse />} />
           <Route path='catalog' element={<Catalog />} />
         </Route>
         <Route path='*' element={<NotFound />} />

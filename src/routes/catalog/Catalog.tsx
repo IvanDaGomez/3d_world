@@ -987,6 +987,8 @@ function WompiCheckout({
       <div className='grid gap-3 sm:grid-cols-2'>
         <CheckoutInput
           label='Nombre completo'
+          name='name'
+          autoComplete='name'
           value={data.name}
           onChange={value => update('name', value)}
           required
@@ -994,7 +996,9 @@ function WompiCheckout({
 
         <CheckoutInput
           label='Correo'
+          name='email'
           type='email'
+          autoComplete='email'
           value={data.email}
           onChange={value => update('email', value)}
           required
@@ -1002,7 +1006,9 @@ function WompiCheckout({
 
         <CheckoutInput
           label='Teléfono'
+          name='tel'
           type='tel'
+          autoComplete='tel'
           value={data.phone}
           onChange={value => update('phone', value)}
           required
@@ -1010,6 +1016,8 @@ function WompiCheckout({
 
         <CheckoutInput
           label='Ciudad'
+          name='city'
+          autoComplete='address-level2'
           value={data.city}
           onChange={value => update('city', value)}
           required
@@ -1017,6 +1025,8 @@ function WompiCheckout({
 
         <CheckoutInput
           label='Departamento'
+          name='region'
+          autoComplete='address-level1'
           value={data.region}
           onChange={value => update('region', value)}
           required
@@ -1024,6 +1034,8 @@ function WompiCheckout({
 
         <CheckoutInput
           label='Dirección'
+          name='address'
+          autoComplete='street-address'
           value={data.address}
           onChange={value => update('address', value)}
           required
@@ -1090,13 +1102,17 @@ function CheckoutInput({
   value,
   onChange,
   required,
-  type = 'text'
+  type = 'text',
+  name,
+  autoComplete
 }: {
   label: string
   value: string
   onChange: (value: string) => void
   required?: boolean
   type?: string
+  name: string
+  autoComplete: string
 }) {
   return (
     <label className='block'>
@@ -1105,27 +1121,13 @@ function CheckoutInput({
       </span>
 
       <input
+        id={name}
+        name={name}
         type={type}
         value={value}
-        onChange={event =>
-          onChange(event.target.value)
-        }
+        onChange={event => onChange(event.target.value)}
         required={required}
-        autoComplete={
-          label === 'Correo'
-            ? 'email'
-            : label === 'Nombre completo'
-              ? 'name'
-              : label === 'Teléfono'
-                ? 'tel'
-                : label === 'Dirección'
-                  ? 'street-address'
-                  : label === 'Ciudad'
-                    ? 'address-level-2'
-                    : label === 'Departamento'
-                      ? 'address-level-1'
-                      : 'off'
-        }
+        autoComplete={autoComplete}
         className='h-12 w-full rounded-xl border border-[#D9D1C2] bg-[#FBF9F5] px-4 text-sm text-[#171512] outline-none transition focus:border-[#AE8243] focus:ring-2 focus:ring-[#AE8243]/10'
       />
     </label>

@@ -40,7 +40,7 @@
 		"title": "Belén Iluminado",
 		"subtitle": "Diseño decorativo",
 		"description": "Una pieza iluminada pensada para crear una atmósfera cálida y especial.",
-		"images": ["/lamps/Lampara Belén Iluminado.webp"],
+		"images": ["/lamps/Lampara Belen Iluminado.webp"],
 		"category": "Decoración",
     "price":69900
 	},
@@ -86,7 +86,8 @@
 		"subtitle": "Diseño contemporáneo",
 		"description": "Geometría envolvente con una presencia moderna y elegante.",
 		"images": ["/lamps/Lampara Espiral.webp"],
-		"category": "Diseño"
+		"category": "Diseño",
+    "price": 69900
 	},
 	{
 		"id": 11,
