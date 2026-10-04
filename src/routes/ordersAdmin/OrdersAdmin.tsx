@@ -6,15 +6,12 @@ import {
 
 import {
   Check,
-  Clock3,
-  ExternalLink,
   Loader2,
   LogOut,
   Package,
   RefreshCw,
   Search,
-  Truck,
-  X,
+  Truck
 } from "lucide-react";
 
 type OrderStatus =
