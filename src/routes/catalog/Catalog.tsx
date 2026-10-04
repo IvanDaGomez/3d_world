@@ -480,11 +480,11 @@ function ProductCard({
 
         <div className='absolute bottom-4 left-5 right-5 flex items-end justify-between gap-3 text-white'>
           <div>
-            <div className='text-2xl font-black tracking-tight'>
+            <div className='text-6xl md:text-2xl font-black tracking-tight'>
               {product.title}
             </div>
 
-            <div className='mt-1 text-xs text-white/75'>
+            <div className='mt-1 text-2xl md:text-xs text-white/75'>
               {product.subtitle}
             </div>
           </div>
@@ -496,11 +496,8 @@ function ProductCard({
       </div>
 
       <div className='flex items-center justify-between gap-4 px-5 py-4'>
-        <span className='text-sm font-medium text-[#6B665D]'>
-          Calidad de fabricación premium
-        </span>
 
-        <span className='shrink-0 text-sm font-bold text-[#171512]'>
+        <span className='shrink-0 text-5xl md:text-sm font-bold text-[#171512]'>
           {formatPrice(product.price)}
         </span>
       </div>
@@ -571,7 +568,7 @@ function ProductModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className='absolute inset-0 h-full w-full cursor-default bg-black/65 backdrop-blur-md'
+          className='fixed inset-0 h-full w-full cursor-default bg-black/65 backdrop-blur-md'
         />
 
         <motion.div
@@ -904,7 +901,7 @@ function WompiCheckout({
 
         redirectUrl:
           checkout.redirectUrl ||
-          `${window.location.origin}/pagos/respuesta`,
+          `${window.location.origin}/payment-successful`,
 
         customerData: {
           email: data.email,
@@ -923,33 +920,25 @@ function WompiCheckout({
       })
 
       widget.open(({ transaction }) => {
-        /*
-         * The transaction callback is useful for UX, but DO NOT
-         * use it as authoritative proof that the payment is approved.
-         *
-         * The backend webhook should verify transaction.updated
-         * and mark the order as PAID only after Wompi confirms it.
-         */
-        console.log('Wompi transaction:', transaction)
+      console.log('Wompi transaction:', transaction)
 
-        const transactionId = transaction?.id
+      const params = new URLSearchParams()
 
-        onCancel()
+      if (transaction?.id) {
+        params.set('id', transaction.id)
+      }
 
-        setLoading(false)
+      params.set(
+        'reference',
+        checkout.reference
+      )
 
-        if (transactionId) {
-          window.location.href =
-            `${window.location.origin}/pagos/respuesta?id=${encodeURIComponent(
-              transactionId
-            )}&reference=${encodeURIComponent(
-              checkout.reference
-            )}`
-        } else {
-          window.location.href =
-            `${window.location.origin}/pagos/respuesta`
-        }
-      })
+      onCancel()
+      setLoading(false)
+
+      window.location.href =
+        `${window.location.origin}/payment-successful?${params.toString()}`
+    })
     } catch (submitError) {
       setError(
         submitError instanceof Error
