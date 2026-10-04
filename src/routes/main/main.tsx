@@ -1,42 +1,39 @@
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import {
   ArrowRight,
-  Layers,
-  Zap,
-  Package,
-  Clock,
+  Check,
   ChevronDown,
-  MessageCircle
+  Clock3,
+  Lightbulb,
+  MessageCircle,
+  PackageCheck,
+  ShieldCheck,
+  Sparkles,
+  Truck,
 } from 'lucide-react'
 import HeroScene from '@/components/HeroScene'
 import WhatsAppFAB from '@/components/WhatsAppFAB'
 import { PHONE_NUMBER } from '@/utils/config'
 import { cardVariant, fadeUp, stagger } from '../catalog/ui/variants'
-// ─────────────────────────────────────────────────────────────
-// Constants
-// ─────────────────────────────────────────────────────────────
-const WA_MESSAGE =
-  'Hola! Estoy interesado en uno de sus productos. ¿Podrían darme más información?'
-const WA_HREF = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-  WA_MESSAGE
-)}`
 
-// ─────────────────────────────────────────────────────────────
-// Scroll-triggered wrapper
-// ─────────────────────────────────────────────────────────────
-function Reveal ({
+const WA_MESSAGE =
+  'Hola! Estoy interesado en una de sus lámparas. ¿Podrían darme más información?'
+const WA_HREF = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`
+
+function Reveal({
   children,
   delay = 0,
-  className = ''
+  className = '',
 }: {
-  children: React.ReactNode
+  children: ReactNode
   delay?: number
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-72px' })
+
   return (
     <motion.div
       ref={ref}
@@ -51,111 +48,81 @@ function Reveal ({
   )
 }
 
-// ─────────────────────────────────────────────────────────────
-// Data
-// ─────────────────────────────────────────────────────────────
 const STATS = [
-  { value: '+500', label: 'Piezas entregadas' },
-  { value: '100%', label: 'Satisfacción garantizada' },
-  { value: '48h', label: 'Entrega en Colombia' },
-  { value: '2h', label: 'Cotización rápida' }
+  { value: 'Premium', label: 'Calidad de fabricación' },
+  { value: '100%', label: 'Control de calidad' },
+  { value: '1–3 días', label: 'Preparación del pedido' },
+  { value: 'CO', label: 'Envíos a toda Colombia' },
 ]
 
 const FEATURES = [
   {
-    icon: Zap,
-    title: 'Entrega a todo el país',
-    body: 'Prototipos listos para toda Colombia. Envíos nacionales con seguimiento y seguro incluido.'
+    icon: Sparkles,
+    eyebrow: '01',
+    title: 'Diseño que transforma',
+    body: 'Lámparas con una estética cuidada para convertirse en parte protagonista de tu espacio.',
   },
   {
-    icon: Layers,
-    title: 'Amplio catálogo',
-    body: 'Personaliza tus piezas (imanes, llaveros, lámparas) o elige entre los modelos disponibles.'
+    icon: ShieldCheck,
+    eyebrow: '02',
+    title: 'Calidad controlada',
+    body: 'Cada unidad pasa por una revisión antes de ser empacada para mantener un acabado consistente.',
   },
   {
-    icon: Package,
-    title: 'Desde 1 unidad',
-    body: 'Una pieza o cientos. Fabricamos experiencias, momentos y productos empresariales con la misma calidad y atención al detalle.'
-  }
+    icon: PackageCheck,
+    eyebrow: '03',
+    title: 'Fabricación bajo pedido',
+    body: 'Producimos cada lámpara para tu compra y la preparamos con cuidado antes del despacho.',
+  },
 ]
 
 const PROCESS = [
   {
     step: '01',
-    title: 'Contáctanos',
-    body: 'Envíanos tu producto deseado desde nuestro catálogo o tu propia idea.'
+    title: 'Elige tu lámpara',
+    body: 'Explora la colección y encuentra el diseño que mejor encaja con tu espacio.',
   },
   {
     step: '02',
-    title: 'Cotizamos',
-    body: 'Te respondemos con la mayor calidad y rapidez.'
+    title: 'Compra con confianza',
+    body: 'Selecciona las opciones disponibles y completa tu pedido de forma segura.',
   },
   {
     step: '03',
-    title: 'Lo recibes',
-    body: 'Entrega a domicilio en Colombia. Garantía de reimpresión incluida.'
-  }
+    title: 'La fabricamos',
+    body: 'Producimos tu lámpara bajo pedido y verificamos el resultado antes del envío.',
+  },
+  {
+    step: '04',
+    title: 'La recibes',
+    body: 'La empacamos cuidadosamente y coordinamos el despacho hasta tu dirección.',
+  },
 ]
 
-// ─────────────────────────────────────────────────────────────
-// Shared micro-components
-// ─────────────────────────────────────────────────────────────
-function SectionLabel ({ children }: { children: React.ReactNode }) {
+function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p
-      className='text-[11px] font-bold uppercase tracking-[0.18em] mb-3'
-      style={{ color: '#1E4FD8' }}
-    >
+    <p className='mb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-[#C98A2E]'>
       {children}
     </p>
   )
 }
 
-function SectionHeading ({ children }: { children: React.ReactNode }) {
+function SectionHeading({ children }: { children: ReactNode }) {
   return (
     <h2
-      className='text-3xl sm:text-4xl md:text-5xl font-bold leading-[1.08] tracking-tight'
-      style={{ fontFamily: 'var(--font-display)', color: '#E2E8F5' }}
+      className='text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl'
+      style={{ fontFamily: 'var(--font-display)' }}
     >
       {children}
     </h2>
   )
 }
 
-function Accent ({ children }: { children: React.ReactNode }) {
-  return <span className='text-[#1E4FD8]'>{children}</span>
+function Accent({ children }: { children: ReactNode }) {
+  return <span className='text-[#C98A2E]'>{children}</span>
 }
 
-function WAButton ({
-  size = 'md',
-  label = 'Cotizar por WhatsApp'
-}: {
-  size?: 'sm' | 'md' | 'lg'
-  label?: string
-}) {
-  const paddings = { sm: 'px-5 py-2.5', md: 'px-6 py-3.5', lg: 'px-8 py-4' }
-  const texts = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' }
-  return (
-    <motion.a
-      href={WA_HREF}
-      target='_blank'
-      rel='noopener noreferrer'
-      className={`
-        inline-flex items-center gap-2.5 rounded-lg font-semibold
-        bg-[#25D366] hover:bg-[#1ebe5d] text-white
-        transition-colors duration-200 shadow-lg shadow-[#25D366]/20
-        ${paddings[size]} ${texts[size]}
-      `}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
-    >
-      <WAIcon className='w-4 h-4 shrink-0' />
-      {label}
-    </motion.a>
-  )
-}
-
-function WAIcon ({ className }: { className?: string }) {
+function WAIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox='0 0 24 24'
@@ -168,423 +135,315 @@ function WAIcon ({ className }: { className?: string }) {
   )
 }
 
-// ─────────────────────────────────────────────────────────────
-// Main component
-// ─────────────────────────────────────────────────────────────
-export default function Landing () {
-  return (
-    <div
-      className='relative min-h-screen overflow-x-hidden'
-      style={{ background: '#080B12' }}
-    >
-      {/* ════════════════════════════════════════════════════
-          HERO
-      ════════════════════════════════════════════════════ */}
-      <section
-        className='relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6'
-        style={{ background: '#04060C' }}
-      >
-        {/* Three.js particle field fills the whole section */}
-        <HeroScene />
+function WAButton({
+  size = 'md',
+  label = 'Consultar por WhatsApp',
+}: {
+  size?: 'sm' | 'md' | 'lg'
+  label?: string
+}) {
+  const paddings = {
+    sm: 'px-4 py-2.5',
+    md: 'px-5 py-3',
+    lg: 'px-6 py-3.5',
+  }
+  const texts = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' }
 
-        {/* Technical grid overlay */}
+  return (
+    <motion.a
+      href={WA_HREF}
+      target='_blank'
+      rel='noopener noreferrer'
+      className={`inline-flex items-center gap-2.5 rounded-full border border-[#D7A451] bg-transparent font-semibold text-[#FFF8EA] transition-colors duration-200 hover:bg-[#D7A451] hover:text-[#111318] ${paddings[size]} ${texts[size]}`}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <WAIcon className='h-4 w-4 shrink-0' />
+      {label}
+    </motion.a>
+  )
+}
+
+export default function Landing() {
+  return (
+    <div className='relative min-h-screen overflow-x-hidden bg-[#F5F2EC] text-[#17191D]'>
+      <section className='relative overflow-hidden bg-[#0D0F13] px-6 py-16 text-[#F7F5EF] sm:py-20 lg:min-h-[92vh] lg:py-10'>
         <div
           aria-hidden='true'
-          className='absolute inset-0 pointer-events-none opacity-[0.032]'
+          className='pointer-events-none absolute inset-0'
           style={{
-            backgroundImage: [
-              'linear-gradient(rgba(30,79,216,1) 1px, transparent 1px)',
-              'linear-gradient(90deg, rgba(30,79,216,1) 1px, transparent 1px)'
-            ].join(', '),
-            backgroundSize: '72px 72px'
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
           }}
         />
-
-        {/* Brand radial bloom */}
         <div
           aria-hidden='true'
-          className='absolute inset-0 pointer-events-none'
+          className='pointer-events-none absolute inset-0'
           style={{
             background:
-              'radial-gradient(ellipse 65% 55% at 50% 48%, rgba(30,79,216,0.10) 0%, transparent 68%)'
+              'radial-gradient(circle at 78% 48%, rgba(255,190,83,0.2) 0%, rgba(13,15,19,0) 34%), linear-gradient(180deg, rgba(13,15,19,0.08), rgba(13,15,19,0.42))',
           }}
         />
 
-        {/* ── Content ── */}
-        <motion.div
-          className='relative z-10 max-w-4xl mx-auto flex flex-col items-center'
-          variants={stagger}
-          initial='hidden'
-          animate='visible'
-        >
-          {/* Headline */}
-          <motion.h1
-            variants={cardVariant}
-            className='text-5xl sm:text-6xl md:text-[4.5rem] lg:text-[5.5rem] font-black tracking-tight leading-[1.02] mb-6'
-            style={{ fontFamily: 'var(--font-display)', color: '#E2E8F5' }}
-          >
-            Tu idea hecha{' '}
-            <span
-              className='relative inline-block'
-              style={{ color: '#1E4FD8' }}
-            >
-              pieza real
-              <motion.span
-                aria-hidden='true'
-                className='absolute left-0 -bottom-1 h-[3px] rounded-full'
-                style={{
-                  background: 'linear-gradient(90deg, #1E4FD8, #5C8AFF)'
-                }}
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{
-                  delay: 1.0,
-                  duration: 0.7,
-                  ease: [0.22, 1, 0.36, 1]
-                }}
-              />
-            </span>
-          </motion.h1>
-
-          {/* Sub-headline */}
-          <motion.p
-            variants={cardVariant}
-            className='text-lg sm:text-xl max-w-2xl leading-relaxed mb-10'
-            style={{ color: '#6A80B0' }}
-          >
-            Diseñamos, fabricamos y entregamos piezas personalizadas para
-            empresas y particulares. Desde prototipos hasta productos finales,
-            con la mejor calidad y rapidez.
-          </motion.p>
-
-          {/* CTAs */}
+        <div className='relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl items-center gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-4'>
           <motion.div
-            variants={cardVariant}
-            className='flex flex-col sm:flex-row gap-3 items-center'
+            className='order-1 flex w-full flex-col items-center'
+            variants={stagger}
+            initial='hidden'
+            animate='visible'
           >
-            {/* Primary — catalog */}
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                to='/catalog'
-                className='
-                  group inline-flex items-center gap-2
-                  px-7 py-3.5 rounded-lg
-                  bg-[#1E4FD8] hover:bg-[#2A5FE8] text-white
-                  font-semibold text-base
-                  transition-colors duration-200
-                  shadow-xl shadow-[#1E4FD8]/30
-                '
-              >
-                Ver catálogo
-                <ArrowRight
-                  size={16}
-                  className='group-hover:translate-x-0.5 transition-transform duration-150'
-                />
-              </Link>
+            <motion.div
+              variants={cardVariant}
+              className='mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#F6D79D] backdrop-blur'
+            >
+              <Lightbulb className='h-3.5 w-3.5' />
+              Colección de iluminación
             </motion.div>
 
-            {/* Secondary — WhatsApp */}
-            <WAButton size='md' label='Cotizar ahora' />
-          </motion.div>
-        </motion.div>
+            <motion.h1
+              variants={cardVariant}
+              className='max-w-2xl text-5xl font-black tracking-[-0.045em] sm:text-6xl md:text-7xl lg:text-[5.4rem]'
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Luz que convierte
+              <span className='block text-[#D7A451]'>espacios en experiencias.</span>
+            </motion.h1>
 
-        {/* Scroll indicator */}
+            <motion.p
+              variants={cardVariant}
+              className='mt-7 max-w-xl text-base leading-relaxed text-[#D7D4CE] sm:text-lg'
+            >
+              Lámparas comerciales de alta calidad, fabricadas bajo pedido y pensadas para destacar en hogares, negocios y espacios profesionales.
+            </motion.p>
+
+            <motion.div
+              variants={cardVariant}
+              className='mt-9 flex flex-col items-start gap-3 sm:flex-row'
+            >
+              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to='/catalog'
+                  className='group inline-flex items-center gap-2.5 rounded-full bg-[#F7F5EF] px-6 py-3.5 text-sm font-bold text-[#111318] transition-colors duration-200 hover:bg-[#D7A451]'
+                >
+                  Ver colección
+                  <ArrowRight className='h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5' />
+                </Link>
+              </motion.div>
+              <WAButton label='Habla con nosotros' />
+            </motion.div>
+
+            <motion.div
+              variants={cardVariant}
+              className='mt-10 grid w-full max-w-xl grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] backdrop-blur sm:grid-cols-4'
+            >
+              {STATS.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={`px-4 py-5 ${i > 0 ? 'border-white/10 sm:border-l' : ''} ${i > 1 ? 'border-t sm:border-t-0' : ''}`}
+                >
+                  <div
+                    className='text-xl font-black tracking-tight text-[#F6D79D] sm:text-2xl'
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    {s.value}
+                  </div>
+                  <div className='mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#A9A7A1]'>
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          <div className='order-2 flex min-h-[430px] w-full items-center justify-center lg:min-h-[680px]'>
+            <HeroScene />
+          </div>
+        </div>
+
         <motion.div
           aria-hidden='true'
-          className='absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5'
+          className='absolute bottom-7 left-1/2 -translate-x-1/2 text-[#9E9C96]'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          transition={{ delay: 1.8 }}
         >
-          <span
-            className='text-[9px] font-bold tracking-[0.22em] uppercase'
-            style={{ color: '#2D3F60' }}
-          >
-            Scroll
-          </span>
-          <ChevronDown
-            size={14}
-            style={{ color: '#2D3F60' }}
-            className='animate-bounce'
-          />
+          <ChevronDown className='h-5 w-5 animate-bounce' />
         </motion.div>
       </section>
 
-      {/* ════════════════════════════════════════════════════
-          STATS BAR
-      ════════════════════════════════════════════════════ */}
-      <section
-        className='border-y border-[#1A2440]'
-        style={{ background: '#0A0F1E' }}
-      >
-        <motion.div
-          className='max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4'
-          variants={stagger}
-          initial='hidden'
-          whileInView='visible'
-          viewport={{ once: true, margin: '-50px' }}
-        >
-          {STATS.map((s, i) => (
-            <motion.div
-              key={s.label}
-              custom={i * 0.08}
-              variants={fadeUp}
-              className='flex flex-col items-center text-center gap-1.5'
+      <section className='border-y border-[#DED8CE] bg-[#FBF9F5]'>
+        <div className='mx-auto grid max-w-6xl grid-cols-1 gap-0 px-6 sm:grid-cols-3'>
+          {[
+            { icon: ShieldCheck, title: 'Calidad verificada', body: 'Revisión antes del despacho.' },
+            { icon: Truck, title: 'Envíos nacionales', body: 'Despachamos a toda Colombia.' },
+            { icon: Clock3, title: 'Producción bajo pedido', body: 'Cada compra se fabrica para ti.' },
+          ].map(({ icon: Icon, title, body }, index) => (
+            <div
+              key={title}
+              className={`flex items-center gap-4 py-6 ${index > 0 ? 'border-[#DED8CE] sm:border-l sm:pl-8' : ''} ${index > 0 ? 'border-t sm:border-t-0' : ''}`}
             >
-              <span
-                className='text-4xl font-black tabular-nums'
-                style={{ fontFamily: 'var(--font-display)', color: '#1E4FD8' }}
-              >
-                {s.value}
-              </span>
-              <span
-                className='text-xs font-medium uppercase tracking-wider'
-                style={{ color: '#4A6090' }}
-              >
-                {s.label}
-              </span>
-            </motion.div>
+              <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
+                <Icon className='h-5 w-5' />
+              </div>
+              <div>
+                <div className='text-sm font-bold text-[#17191D]'>{title}</div>
+                <div className='mt-0.5 text-sm text-[#6B6963]'>{body}</div>
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════
-          FEATURES GRID
-      ════════════════════════════════════════════════════ */}
-      <section className='max-w-6xl mx-auto px-6 py-28'>
-        <Reveal className='text-center mb-14'>
+      <section className='mx-auto max-w-7xl px-6 py-24 sm:py-28'>
+        <Reveal className='mx-auto max-w-3xl text-center'>
+          <SectionLabel>La diferencia</SectionLabel>
           <SectionHeading>
-            Diseño, entretenimiento y personalización{' '}
-            <Accent>sin límites</Accent>
+            Una lámpara debe verse bien.
+            <span className='block'>También debe <Accent>sentirse bien hecha.</Accent></span>
           </SectionHeading>
+          <p className='mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#66635D]'>
+            Nuestra propuesta combina diseño contemporáneo, fabricación consistente y una experiencia de compra clara de principio a fin.
+          </p>
         </Reveal>
 
         <motion.div
-          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+          className='mt-14 grid grid-cols-1 gap-5 md:grid-cols-3'
           variants={stagger}
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true, margin: '-60px' }}
         >
-          {FEATURES.map(f => {
-            const Icon = f.icon
+          {FEATURES.map((feature) => {
+            const Icon = feature.icon
             return (
-              <motion.div
-                key={f.title}
+              <motion.article
+                key={feature.title}
                 variants={cardVariant}
-                className='
-                  group relative overflow-hidden
-                  rounded-xl border border-[#1A2440]
-                  bg-[#0A0F1E] hover:border-[#1E4FD8]/40
-                  p-6
-                  transition-all duration-300 hover:-translate-y-0.5
-                '
+                className='group relative overflow-hidden rounded-3xl border border-[#DDD7CD] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#CFA45B] hover:shadow-[0_18px_50px_rgba(23,25,29,0.08)]'
               >
-                {/* Blue top accent line on hover */}
-                <span
-                  aria-hidden='true'
-                  className='
-                    absolute top-0 inset-x-0 h-[2px] rounded-t-xl
-                    bg-gradient-to-r from-[#1E4FD8] to-[#5C8AFF]
-                    scale-x-0 group-hover:scale-x-100
-                    transition-transform duration-300 origin-left
-                  '
-                />
-
-                {/* Icon */}
-                <div
-                  className='
-                  w-10 h-10 rounded-lg mb-5
-                  bg-[#0D1730] border border-[#1A2440]
-                  group-hover:border-[#1E4FD8]/30
-                  flex items-center justify-center
-                  transition-colors duration-300
-                '
-                >
-                  <Icon size={18} style={{ color: '#1E4FD8' }} />
+                <div className='flex items-start justify-between gap-4'>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#17191D] text-[#F6D79D] transition-transform duration-300 group-hover:scale-105'>
+                    <Icon className='h-5 w-5' />
+                  </div>
+                  <span className='text-xs font-black tracking-[0.18em] text-[#B7B1A6]'>
+                    {feature.eyebrow}
+                  </span>
                 </div>
-
                 <h3
-                  className='font-semibold text-[15px] mb-2 leading-snug'
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color: '#D0DCF4'
-                  }}
+                  className='mt-8 text-2xl font-bold tracking-tight text-[#17191D]'
+                  style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  {f.title}
+                  {feature.title}
                 </h3>
-                <p
-                  className='text-sm leading-relaxed'
-                  style={{ color: '#4A6890' }}
-                >
-                  {f.body}
-                </p>
-              </motion.div>
+                <p className='mt-3 text-sm leading-7 text-[#69665F]'>{feature.body}</p>
+                <div className='mt-7 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-[#C98A2E]'>
+                  <Check className='h-4 w-4' />
+                  Hecho para durar en tu espacio
+                </div>
+              </motion.article>
             )
           })}
         </motion.div>
       </section>
 
-      {/* ════════════════════════════════════════════════════
-          PROCESS
-      ════════════════════════════════════════════════════ */}
-      <section className='py-28 px-6' style={{ background: '#080B12' }}>
-        <div className='max-w-6xl mx-auto'>
-          <Reveal className='text-center mb-16'>
+      <section className='bg-[#14161B] px-6 py-24 text-[#F7F5EF] sm:py-28'>
+        <div className='mx-auto max-w-6xl'>
+          <Reveal className='max-w-3xl'>
             <SectionLabel>Proceso</SectionLabel>
             <SectionHeading>
-              De tu idea a tus manos <Accent>en {PROCESS.length} pasos</Accent>
+              Compra simple.
+              <span className='block text-[#F7F5EF]'>Fabricación <Accent>cuidada.</Accent></span>
             </SectionHeading>
           </Reveal>
 
           <motion.div
-            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${PROCESS.length} gap-8`}
+            className='mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'
             variants={stagger}
             initial='hidden'
             whileInView='visible'
             viewport={{ once: true, margin: '-60px' }}
           >
-            {PROCESS.map((p, i) => (
-              <motion.div
-                key={p.step}
+            {PROCESS.map((item) => (
+              <motion.article
+                key={item.step}
                 variants={cardVariant}
-                className='relative flex flex-col gap-5'
+                className='rounded-3xl border border-white/10 bg-white/[0.045] p-6 backdrop-blur-sm transition-colors duration-300 hover:border-[#D7A451]/50'
               >
-                {/* Dashed connector (desktop only, not last) */}
-                {i < PROCESS.length - 1 && (
-                  <div
-                    aria-hidden='true'
-                    className='
-                      hidden lg:block absolute
-                      top-5 left-[calc(100%_-_10px)]
-                      w-full h-px
-                      border-t border-dashed border-[#1E2D50]
-                      pointer-events-none
-                    '
-                  />
-                )}
-
-                {/* Step circle */}
-                <div
-                  className='
-                    w-11 h-11 rounded-full shrink-0
-                    border-2 border-[#1E4FD8]
-                    flex items-center justify-center
-                    text-xs font-black tracking-wider
-                  '
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color: '#1E4FD8',
-                    background: 'rgba(30,79,216,0.08)'
-                  }}
-                >
-                  {p.step}
+                <div className='text-4xl font-black text-[#D7A451]' style={{ fontFamily: 'var(--font-display)' }}>
+                  {item.step}
                 </div>
-
-                <div>
-                  <h3
-                    className='font-semibold text-[15px] mb-2'
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      color: '#D0DCF4'
-                    }}
-                  >
-                    {p.title}
-                  </h3>
-                  <p
-                    className='text-sm leading-relaxed'
-                    style={{ color: '#4A6090' }}
-                  >
-                    {p.body}
-                  </p>
-                </div>
-              </motion.div>
+                <h3 className='mt-8 text-xl font-bold text-white' style={{ fontFamily: 'var(--font-display)' }}>
+                  {item.title}
+                </h3>
+                <p className='mt-3 text-sm leading-6 text-[#AAA7A0]'>{item.body}</p>
+              </motion.article>
             ))}
           </motion.div>
         </div>
       </section>
-      {/* ════════════════════════════════════════════════════
-          CONTACT
-      ════════════════════════════════════════════════════ */}
-      <section
-        id='contact'
-        className='py-24 px-6 border-t border-[#1A2440]'
-        style={{ background: '#080B12' }}
-      >
-        <div className='max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-center'>
-          <Reveal>
-            <SectionLabel>Contacto directo</SectionLabel>
-            <SectionHeading>
-              ¿Tienes un <Accent>proyecto?</Accent>
-            </SectionHeading>
-            <p
-              className='mt-4 text-base leading-relaxed mb-8 max-w-sm'
-              style={{ color: '#6A80B0' }}
-            >
-              Cuéntanos qué necesitas. En menos de 2 horas tienes cotización,
-              material ideal y tiempo de entrega. Sin formularios, sin esperas.
-            </p>
 
-            <WAButton size='lg' label='Escríbenos en WhatsApp' />
+      <section id='contact' className='bg-[#F5F2EC] px-6 py-24 sm:py-28'>
+        <div className='mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center'>
+          <Reveal>
+            <SectionLabel>Atención directa</SectionLabel>
+            <SectionHeading>
+              Encuentra la lámpara que
+              <span className='block'>haga <Accent>especial tu espacio.</Accent></span>
+            </SectionHeading>
+            <p className='mt-5 max-w-xl text-base leading-7 text-[#66635D]'>
+              Explora nuestra colección o escríbenos para recibir orientación sobre modelos, opciones y disponibilidad.
+            </p>
+            <div className='mt-8 flex flex-col gap-3 sm:flex-row'>
+              <Link
+                to='/catalog'
+                className='inline-flex items-center justify-center gap-2 rounded-full bg-[#17191D] px-6 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#30343B]'
+              >
+                Explorar lámparas
+                <ArrowRight className='h-4 w-4' />
+              </Link>
+              <a
+                href={WA_HREF}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='inline-flex items-center justify-center gap-2 rounded-full border border-[#BFB8AD] bg-transparent px-6 py-3.5 text-sm font-bold text-[#17191D] transition-colors duration-200 hover:border-[#17191D]'
+              >
+                <MessageCircle className='h-4 w-4' />
+                WhatsApp
+              </a>
+            </div>
           </Reveal>
 
-          {/* Info cards */}
-          <Reveal delay={0.15}>
-            <div className='flex flex-col gap-4'>
-              {[
-                {
-                  icon: Clock,
-                  label: 'Horario de atención',
-                  value:
-                    'Disponible de lunes a viernes, de 9:00 a.m. a 6:00 p.m.'
-                },
-                {
-                  icon: MessageCircle,
-                  label: 'Tiempo de respuesta',
-                  value: 'Cotización en menos de 2 horas hábiles'
-                },
-                {
-                  icon: Package,
-                  label: 'Área de servicio',
-                  value: 'Colombia · envíos nacionales a todo el país'
-                }
-              ].map(({ icon: Icon, label, value }) => (
-                <div
-                  key={label}
-                  className='
-                    flex items-start gap-4 px-5 py-4
-                    rounded-xl border border-[#1A2440]
-                    bg-[#0A0F1E]
-                  '
-                >
-                  <div
-                    className='
-                    w-9 h-9 rounded-lg shrink-0 mt-0.5
-                    bg-[#0D1730] border border-[#1A2440]
-                    flex items-center justify-center
-                  '
-                  >
-                    <Icon size={15} style={{ color: '#1E4FD8' }} />
-                  </div>
-                  <div className='flex flex-col gap-0.5'>
-                    <span
-                      className='text-[10px] font-bold uppercase tracking-wider'
-                      style={{ color: '#1E4FD8' }}
-                    >
-                      {label}
-                    </span>
-                    <span className='text-sm' style={{ color: '#B0C0DC' }}>
-                      {value}
-                    </span>
-                  </div>
+          <Reveal delay={0.12}>
+            <div className='overflow-hidden rounded-3xl border border-[#DCD5CA] bg-white'>
+              <div className='border-b border-[#E7E1D7] px-6 py-5'>
+                <div className='text-xs font-bold uppercase tracking-[0.16em] text-[#A3947D]'>Servicio</div>
+                <div className='mt-1 text-xl font-bold text-[#17191D]' style={{ fontFamily: 'var(--font-display)' }}>
+                  Compra con confianza
                 </div>
-              ))}
+              </div>
+              <div className='divide-y divide-[#EEE9E1]'>
+                {[
+                  { icon: ShieldCheck, title: 'Control de calidad', body: 'Revisamos cada unidad antes del despacho.' },
+                  { icon: PackageCheck, title: 'Empaque cuidado', body: 'Preparamos tu lámpara para un traslado seguro.' },
+                  { icon: Truck, title: 'Envíos nacionales', body: 'Despachos disponibles dentro de Colombia.' },
+                ].map(({ icon: Icon, title, body }) => (
+                  <div key={title} className='flex gap-4 px-6 py-5'>
+                    <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
+                      <Icon className='h-4.5 w-4.5' />
+                    </div>
+                    <div>
+                      <div className='text-sm font-bold text-[#17191D]'>{title}</div>
+                      <div className='mt-1 text-sm leading-6 text-[#726E67]'>{body}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Persistent WhatsApp FAB */}
       <WhatsAppFAB />
     </div>
   )

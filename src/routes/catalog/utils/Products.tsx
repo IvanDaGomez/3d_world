@@ -31,7 +31,7 @@ const PRODUCTS: Product[] = [
     subtitle: 'Colección Hogar',
     description:
       'Transforma tus recuerdos favoritos en obras de arte iluminadas.',
-    price: 69900,
+    price: 79900,
     images: ['/products/Litophane Lamp.png'],
     category: 'Hogar',
     featured: true

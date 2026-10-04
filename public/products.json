@@ -1,0 +1,280 @@
+[
+	{
+		"id": 1,
+		"title": "Agujero Negro",
+		"subtitle": "Lámpara decorativa",
+		"description": "Una pieza de iluminación con una presencia visual profunda y escultórica.",
+		"images": ["/lamps/Agujero Negro.png"],
+		"category": "Diseño",
+    "price": 69900
+	},
+	{
+		"id": 2,
+		"title": "Lámpara Oscilante",
+		"subtitle": "Colección iluminación",
+		"description": "Diseño de iluminación de edición individual para espacios contemporáneos.",
+		"images": ["/lamps/Lampara 1.webp"],
+		"category": "Diseño",
+    "price": 69900
+	},
+	{
+		"id": 3,
+		"title": "Agujero de Gusano",
+		"subtitle": "Diseño conceptual",
+		"description": "Una lámpara de carácter futurista pensada para convertirse en protagonista del espacio.",
+		"images": ["/lamps/Lampara Agujero de Gusano.webp"],
+		"category": "Futurista",
+    "price": 69900
+	},
+	{
+		"id": 4,
+		"title": "Ardo Kopa",
+		"subtitle": "Diseño especial",
+		"description": "Una pieza expresiva para quienes buscan iluminación con personalidad.",
+		"images": ["/lamps/Lampara Ardo Kopa.webp"],
+		"category": "Especial",
+    "price": 59900
+	},
+	{
+		"id": 5,
+		"title": "Belén Iluminado",
+		"subtitle": "Diseño decorativo",
+		"description": "Una pieza iluminada pensada para crear una atmósfera cálida y especial.",
+		"images": ["/lamps/Lampara Belén Iluminado.webp"],
+		"category": "Decoración",
+    "price":69900
+	},
+	{
+		"id": 6,
+		"title": "Bonsai",
+		"subtitle": "Diseño orgánico",
+		"description": "Una interpretación escultórica de formas naturales llevada a la iluminación.",
+		"images": ["/lamps/Lampara Bonsai.webp"],
+		"category": "Orgánico",
+    "price":79900
+	},
+	{
+		"id": 7,
+		"title": "Casa Fantasme",
+		"subtitle": "Diseño especial",
+		"description": "Una lámpara temática con una estética única para espacios con carácter.",
+		"images": ["/lamps/Lampara Casa Fanatsme.webp"],
+		"category": "Especial",
+    "price":79900
+	},
+	{
+		"id": 8,
+		"title": "Cristal con Runas Nórdicas",
+		"subtitle": "Diseño decorativo",
+		"description": "Cristal, luz y geometría inspirados en símbolos nórdicos.",
+		"images": ["/lamps/Lampara Cristal con Runas Nordicas.webp"],
+		"category": "Decoración",
+    "price":79900
+	},
+	{
+		"id": 9,
+		"title": "Espiral Orgánica",
+		"subtitle": "Diseño orgánico",
+		"description": "Una forma continua y fluida que transforma la luz en una pieza escultórica.",
+		"images": ["/lamps/Lampara Espiral Organica.webp"],
+		"category": "Orgánico",
+    "price":69900
+	},
+	{
+		"id": 10,
+		"title": "Espiral",
+		"subtitle": "Diseño contemporáneo",
+		"description": "Geometría envolvente con una presencia moderna y elegante.",
+		"images": ["/lamps/Lampara Espiral.webp"],
+		"category": "Diseño"
+	},
+	{
+		"id": 11,
+		"title": "Estrella de la Muerte",
+		"subtitle": "Colección temática",
+		"description": "Una pieza temática para fanáticos de la ciencia ficción y los diseños icónicos.",
+		"images": ["/lamps/Lampara Estrella de La Muerte.png"],
+		"category": "Temática",
+    "price":69900
+	},
+	{
+		"id": 12,
+		"title": "Japonesa",
+		"subtitle": "Diseño decorativo",
+		"description": "Inspirada en la estética japonesa y en una iluminación serena.",
+		"images": ["/lamps/Lampara Japonesa.webp"],
+		"category": "Decoración",
+    "price":59900
+	},
+	{
+		"id": 13,
+		"title": "Luna",
+		"subtitle": "Iluminación decorativa",
+		"description": "Una pieza inspirada en la luna para crear una atmósfera envolvente.",
+		"images": ["/lamps/Lampara Luna.webp"],
+		"category": "Decoración",
+    "price":69900
+	},
+	{
+		"id": 14,
+		"title": "Coralight",
+		"subtitle": "Diseño moderno",
+		"description": "Una interpretación contemporánea de estructuras orgánicas y luz.",
+		"images": ["/lamps/Lampara Moderna Coralight.webp"],
+		"category": "Moderna",
+    "price":79900
+	},
+	{
+		"id": 15,
+		"title": "Moderna y Futurista",
+		"subtitle": "Diseño contemporáneo",
+		"description": "Una pieza de estética limpia, tecnológica y futurista.",
+		"images": ["/lamps/Lampara Moderna y Futurista.webp"],
+		"category": "Futurista",
+    "price":69900
+	},
+	{
+		"id": 16,
+		"title": "Orgánica",
+		"subtitle": "Diseño orgánico",
+		"description": "Formas suaves y naturales para una iluminación con identidad.",
+		"images": ["/lamps/Lampara Organica .webp"],
+		"category": "Orgánico",
+    "price":69900
+	},
+	{
+		"id": 17,
+		"title": "Oveja",
+		"subtitle": "Colección temática",
+		"description": "Una lámpara divertida y distintiva para espacios personales.",
+		"images": ["/lamps/Lampara Oveja.webp"],
+		"category": "Temática",
+    "price":49900
+	},
+	{
+		"id": 18,
+		"title": "OVNI",
+		"subtitle": "Diseño futurista",
+		"description": "Una lámpara con inspiración espacial y una silueta llamativa.",
+		"images": ["/lamps/Lampara Ovni.webp"],
+		"category": "Futurista",
+    "price":69900
+	},
+	{
+		"id": 19,
+		"title": "Plantas vs Zombies",
+		"subtitle": "Colección temática",
+		"description": "Iluminación temática para espacios de entretenimiento y coleccionismo.",
+		"images": ["/lamps/Lampara Plantas vs Zombies.webp"],
+		"category": "Temática",
+    "price":79900
+	},
+	{
+		"id": 20,
+		"title": "Seta Minimalista",
+		"subtitle": "Diseño moderno",
+		"description": "Una silueta minimalista y cálida para interiores contemporáneos.",
+		"images": ["/lamps/Lampara Seta Minimalista.webp"],
+		"category": "Moderna",
+    "price":69900
+	},
+	{
+		"id": 21,
+		"title": "Trípode",
+		"subtitle": "Iluminación contemporánea",
+		"description": "Una lámpara de presencia limpia y estructurada para distintos espacios.",
+		"images": ["/lamps/Lampara Tripode.webp"],
+		"category": "Moderna",
+    "price":69900
+	},
+	{
+		"id": 22,
+		"title": "Unicornio",
+		"subtitle": "Colección temática",
+		"description": "Una pieza decorativa de carácter lúdico para espacios personales.",
+		"images": ["/lamps/Lampara Unicornio.webp"],
+		"category": "Temática",
+    "price":49900
+	},
+	{
+		"id": 23,
+		"title": "VoroGlow",
+		"subtitle": "Diseño contemporáneo",
+		"description": "Una pieza con geometría expresiva y una presencia luminosa distintiva.",
+		"images": ["/lamps/Lampara VoroGlow.webp"],
+		"category": "Moderna",
+    "price":79900
+	},
+	{
+		"id": 24,
+		"title": "Cima de Cristal",
+		"subtitle": "Diseño decorativo",
+		"description": "Una composición inspirada en formas cristalinas para ambientes sofisticados.",
+		"images": ["/lamps/Lampara cima de cristal.webp"],
+		"category": "Decoración",
+    "price":69900
+	},
+	{
+		"id": 25,
+		"title": "De Cristal",
+		"subtitle": "Diseño decorativo",
+		"description": "Una pieza de iluminación con presencia elegante y acabado cristalino.",
+		"images": ["/lamps/Lampara de Cristal.webp"],
+		"category": "Decoración",
+    "price":59900
+	},
+	{
+		"id": 26,
+		"title": "Minecraft",
+		"subtitle": "Colección temática",
+		"description": "Una lámpara pensada para fans del universo de Minecraft.",
+		"images": ["/lamps/Lampara de Minecraft.webp"],
+		"category": "Temática",
+    "price":69900
+	},
+	{
+		"id": 27,
+		"title": "De Motor",
+		"subtitle": "Diseño industrial",
+		"description": "Una interpretación industrial de la iluminación con una estética mecánica.",
+		"images": ["/lamps/Lampara de Motor.webp"],
+		"category": "Industrial",
+    "price":89900
+	},
+	{
+		"id": 28,
+		"title": "Llameante",
+		"subtitle": "Diseño escénico",
+		"description": "Una pieza con una presencia visual intensa y una estética de fuego.",
+		"images": ["/lamps/Lampara llameante.webp"],
+		"category": "Especial",
+    "price":79900
+	},
+	{
+		"id": 29,
+		"title": "Estrella de la Muerte · Pared",
+		"subtitle": "Lámpara de pared",
+		"description": "Iluminación mural temática para convertir una pared en un punto focal.",
+		"images": ["/lamps/Lampara pared Estrella de la Muerte.webp"],
+		"category": "Temática",
+    "price":69900
+	},
+	{
+		"id": 30,
+		"title": "Soporte Audífonos + Lámpara",
+		"subtitle": "Accesorio funcional",
+		"description": "Soporte para auriculares integrado con iluminación para escritorio.",
+		"images": ["/lamps/Soporte Auriculares con lampara.webp"],
+		"category": "Especial",
+    "price":79900
+	},
+	{
+		"id": 31,
+		"title": "Expositora de Whisky",
+		"subtitle": "Iluminación expositiva",
+		"description": "Una lámpara diseñada para destacar una botella y convertirla en protagonista.",
+		"images": ["/lamps/lampara expositora de whisky.webp"],
+		"category": "Especial",
+    "price":99900
+	}
+]
