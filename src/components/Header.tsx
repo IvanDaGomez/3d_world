@@ -9,7 +9,7 @@ const WA_MESSAGE =
   'Hola! Estoy interesado en uno de sus productos. ¿Podrían darme más información?'
 const WA_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`
 
-const NAV_LINKS = [
+const NAV_LINKS: Array<{ label: string; href: string; isHash?: boolean }> = [
   { label: 'Inicio', href: '/' },
   { label: 'Catálogo', href: '/catalog' }
 ]
