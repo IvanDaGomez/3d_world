@@ -5,7 +5,6 @@ import {
   ChevronRight,
   ImagePlus,
   Loader2,
-  Trash2,
   Upload,
   X
 } from 'lucide-react'

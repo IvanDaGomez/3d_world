@@ -223,37 +223,7 @@ export default function PaymentResponse() {
 
   return (
     <div className='min-h-screen bg-[#F4F1EA] text-[#171512]'>
-      {/* Header */}
-      <header className='border-b border-[#D9D1C2] bg-[#171512]'>
-        <div className='mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10'>
-          <Link
-            to='/'
-            className='flex items-center gap-3'
-          >
-            <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-[#D7A451] text-[#171512]'>
-              V
-            </div>
 
-            <div>
-              <div className='text-sm font-black tracking-tight text-[#F7F5EF]'>
-                Vanguard
-              </div>
-
-              <div className='text-[9px] font-bold uppercase tracking-[0.2em] text-[#A9A39A]'>
-                Iluminación
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            to='/catalog'
-            className='inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.05] px-4 py-2.5 text-xs font-semibold text-[#F2EEE7] transition hover:border-[#D7A451]/70 hover:bg-[#D7A451] hover:text-[#171512]'
-          >
-            <ShoppingBag className='h-4 w-4' />
-            Ver catálogo
-          </Link>
-        </div>
-      </header>
 
       {/* Main */}
       <main className='relative flex min-h-[calc(100vh-81px)] items-center overflow-hidden px-6 py-16 lg:px-10'>
