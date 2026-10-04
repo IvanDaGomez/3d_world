@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "deploy": "vite build && aws s3 sync ./dist s3://www.vanguardproductos.com/ --delete && aws cloudfront create-invalidation --distribution-id E2RPJZM0WUKWFD --paths '/*'",
+    "deploy": "vite build && aws s3 sync ./dist s3://www.vanguardproductos.com/ --exclude 'uploads/*' --exclude 'optimized/*' --exclude 'lamps/*' --exclude 'products/*' --exclude 'products.json' --delete && aws cloudfront create-invalidation --distribution-id E2RPJZM0WUKWFD --paths '/*'",
 
     "lint": "eslint .",
     "preview": "vite preview"
