@@ -1380,7 +1380,7 @@ function ProductModal({
 
                   'Fabricación bajo pedido',
 
-                  'Control de calidad',
+                  'Material: Plástico',
 
                   'Diseño premium',
 

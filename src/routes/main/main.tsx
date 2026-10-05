@@ -584,7 +584,6 @@ export default function Landing() {
           </Reveal>
         </div>
       </section>
-
       <WhatsAppFAB />
     </div>
   )
