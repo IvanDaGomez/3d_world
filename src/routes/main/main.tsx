@@ -1,6 +1,9 @@
 import { useRef, type ReactNode } from 'react'
+
 import { Link } from 'react-router-dom'
+
 import { motion, useInView } from 'framer-motion'
+
 import {
   ArrowRight,
   Check,
@@ -13,13 +16,18 @@ import {
   Sparkles,
   Truck,
 } from 'lucide-react'
+
 import HeroScene from '@/components/HeroScene'
+
 import WhatsAppFAB from '@/components/WhatsAppFAB'
+
 import { PHONE_NUMBER } from '@/utils/config'
+
 import { cardVariant, fadeUp, stagger } from '../catalog/ui/variants'
 
 const WA_MESSAGE =
   'Hola! Estoy interesado en una de sus lámparas. ¿Podrían darme más información?'
+
 const WA_HREF = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`
 
 function Reveal({
@@ -32,7 +40,11 @@ function Reveal({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-72px' })
+
+  const inView = useInView(ref, {
+    once: true,
+    margin: '-72px',
+  })
 
   return (
     <motion.div
@@ -49,10 +61,22 @@ function Reveal({
 }
 
 const STATS = [
-  { value: 'Premium', label: 'Calidad de fabricación' },
-  { value: '100%', label: 'Control de calidad' },
-  { value: '1–3 días', label: 'Preparación del pedido' },
-  { value: 'CO', label: 'Envíos a toda Colombia' },
+  {
+    value: 'Premium',
+    label: 'Calidad de fabricación',
+  },
+  {
+    value: '100%',
+    label: 'Control de calidad',
+  },
+  {
+    value: '1–3 días',
+    label: 'Preparación del pedido',
+  },
+  {
+    value: 'CO',
+    label: 'Envíos a toda Colombia',
+  },
 ]
 
 const FEATURES = [
@@ -147,14 +171,19 @@ function WAButton({
     md: 'px-5 py-3',
     lg: 'px-6 py-3.5',
   }
-  const texts = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' }
+
+  const texts = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base',
+  }
 
   return (
     <motion.a
       href={WA_HREF}
       target='_blank'
       rel='noopener noreferrer'
-      className={`inline-flex items-center gap-2.5 rounded-full border border-[#D7A451] bg-transparent font-semibold text-[#FFF8EA] transition-colors duration-200 hover:bg-[#D7A451] hover:text-[#111318] ${paddings[size]} ${texts[size]}`}
+      className={`inline-flex items-center gap-2.5 rounded-full border border-[#D7A451] bg-transparent font-semibold text-[#17191D] transition-colors duration-200 hover:bg-[#C98A2E] hover:text-white ${paddings[size]} ${texts[size]}`}
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -166,23 +195,25 @@ function WAButton({
 
 export default function Landing() {
   return (
-    <div className='relative min-h-screen overflow-x-hidden bg-[#F5F2EC] text-[#17191D]'>
-      <section className='relative overflow-hidden bg-[#0D0F13] px-6 py-16 text-[#F7F5EF] sm:py-20 lg:min-h-[92vh] lg:py-10'>
+    <div className='relative min-h-screen overflow-x-hidden bg-white text-[#17191D]'>
+      {/* HERO */}
+      <section className='relative overflow-hidden bg-white px-6 py-16 text-[#17191D] sm:py-20 lg:min-h-[92vh] lg:py-10'>
         <div
           aria-hidden='true'
           className='pointer-events-none absolute inset-0'
           style={{
             backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+              'linear-gradient(rgba(23,25,29,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(23,25,29,0.035) 1px, transparent 1px)',
             backgroundSize: '64px 64px',
           }}
         />
+
         <div
           aria-hidden='true'
           className='pointer-events-none absolute inset-0'
           style={{
             background:
-              'radial-gradient(circle at 78% 48%, rgba(255,190,83,0.2) 0%, rgba(13,15,19,0) 34%), linear-gradient(180deg, rgba(13,15,19,0.08), rgba(13,15,19,0.42))',
+              'radial-gradient(circle at 78% 48%, rgba(255,190,83,0.16) 0%, rgba(255,255,255,0) 34%), linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0))',
           }}
         />
 
@@ -195,7 +226,7 @@ export default function Landing() {
           >
             <motion.div
               variants={cardVariant}
-              className='mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#F6D79D] backdrop-blur'
+              className='mb-6 inline-flex items-center gap-2 rounded-full border border-[#DDD7CD] bg-[#FBF9F5] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#C98A2E]'
             >
               <Lightbulb className='h-3.5 w-3.5' />
               Colección de iluminación
@@ -207,48 +238,65 @@ export default function Landing() {
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Luz que convierte
-              <span className='block text-[#D7A451]'>espacios en experiencias.</span>
+              <span className='block text-[#C98A2E]'>
+                espacios en experiencias.
+              </span>
             </motion.h1>
 
             <motion.p
               variants={cardVariant}
-              className='mt-7 max-w-xl text-base leading-relaxed text-[#D7D4CE] sm:text-lg'
+              className='mt-7 max-w-xl text-base leading-relaxed text-[#66635D] sm:text-lg'
             >
-              Lámparas comerciales de alta calidad, fabricadas bajo pedido y pensadas para destacar en hogares, negocios y espacios profesionales.
+              Lámparas comerciales de alta calidad, fabricadas bajo pedido y
+              pensadas para destacar en hogares, negocios y espacios
+              profesionales.
             </motion.p>
 
             <motion.div
               variants={cardVariant}
               className='mt-9 flex flex-col items-start gap-3 sm:flex-row'
             >
-              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+              <motion.div
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <Link
                   to='/catalog'
-                  className='group inline-flex items-center gap-2.5 rounded-full bg-[#F7F5EF] px-6 py-3.5 text-sm font-bold text-[#111318] transition-colors duration-200 hover:bg-[#D7A451]'
+                  className='group inline-flex items-center gap-2.5 rounded-full bg-[#17191D] px-6 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#C98A2E]'
                 >
                   Ver colección
                   <ArrowRight className='h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5' />
                 </Link>
               </motion.div>
+
               <WAButton label='Habla con nosotros' />
             </motion.div>
 
             <motion.div
               variants={cardVariant}
-              className='mt-10 grid w-full max-w-xl grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] backdrop-blur sm:grid-cols-4'
+              className='mt-10 grid w-full max-w-xl grid-cols-2 overflow-hidden rounded-2xl border border-[#DDD7CD] bg-[#FBF9F5] sm:grid-cols-4'
             >
               {STATS.map((s, i) => (
                 <div
                   key={s.label}
-                  className={`px-4 py-5 ${i > 0 ? 'border-white/10 sm:border-l' : ''} ${i > 1 ? 'border-t sm:border-t-0' : ''}`}
+                  className={`px-4 py-5 ${
+                    i > 0
+                      ? 'border-[#DDD7CD] sm:border-l'
+                      : ''
+                  } ${
+                    i > 1
+                      ? 'border-t sm:border-t-0'
+                      : ''
+                  }`}
                 >
                   <div
-                    className='text-xl font-black tracking-tight text-[#F6D79D] sm:text-2xl'
+                    className='text-xl font-black tracking-tight text-[#C98A2E] sm:text-2xl'
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
                     {s.value}
                   </div>
-                  <div className='mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#A9A7A1]'>
+
+                  <div className='mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#77736B]'>
                     {s.label}
                   </div>
                 </div>
@@ -263,7 +311,7 @@ export default function Landing() {
 
         <motion.div
           aria-hidden='true'
-          className='absolute bottom-7 left-1/2 -translate-x-1/2 text-[#9E9C96]'
+          className='absolute bottom-7 left-1/2 -translate-x-1/2 text-[#77736B]'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
@@ -272,38 +320,71 @@ export default function Landing() {
         </motion.div>
       </section>
 
+      {/* TRUST STRIP */}
       <section className='border-y border-[#DED8CE] bg-[#FBF9F5]'>
         <div className='mx-auto grid max-w-6xl grid-cols-1 gap-0 px-6 sm:grid-cols-3'>
           {[
-            { icon: ShieldCheck, title: 'Calidad verificada', body: 'Revisión antes del despacho.' },
-            { icon: Truck, title: 'Envíos nacionales', body: 'Despachamos a toda Colombia.' },
-            { icon: Clock3, title: 'Producción bajo pedido', body: 'Cada compra se fabrica para ti.' },
+            {
+              icon: ShieldCheck,
+              title: 'Calidad verificada',
+              body: 'Revisión antes del despacho.',
+            },
+            {
+              icon: Truck,
+              title: 'Envíos nacionales',
+              body: 'Despachamos a toda Colombia.',
+            },
+            {
+              icon: Clock3,
+              title: 'Producción bajo pedido',
+              body: 'Cada compra se fabrica para ti.',
+            },
           ].map(({ icon: Icon, title, body }, index) => (
             <div
               key={title}
-              className={`flex items-center gap-4 py-6 ${index > 0 ? 'border-[#DED8CE] sm:border-l sm:pl-8' : ''} ${index > 0 ? 'border-t sm:border-t-0' : ''}`}
+              className={`flex items-center gap-4 py-6 ${
+                index > 0
+                  ? 'border-[#DED8CE] sm:border-l sm:pl-8'
+                  : ''
+              } ${
+                index > 0
+                  ? 'border-t sm:border-t-0'
+                  : ''
+              }`}
             >
               <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
                 <Icon className='h-5 w-5' />
               </div>
+
               <div>
-                <div className='text-sm font-bold text-[#17191D]'>{title}</div>
-                <div className='mt-0.5 text-sm text-[#6B6963]'>{body}</div>
+                <div className='text-sm font-bold text-[#17191D]'>
+                  {title}
+                </div>
+
+                <div className='mt-0.5 text-sm text-[#6B6963]'>
+                  {body}
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
+      {/* FEATURES */}
       <section className='mx-auto max-w-7xl px-6 py-24 sm:py-28'>
         <Reveal className='mx-auto max-w-3xl text-center'>
           <SectionLabel>La diferencia</SectionLabel>
+
           <SectionHeading>
             Una lámpara debe verse bien.
-            <span className='block'>También debe <Accent>sentirse bien hecha.</Accent></span>
+            <span className='block'>
+              También debe <Accent>sentirse bien hecha.</Accent>
+            </span>
           </SectionHeading>
+
           <p className='mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#66635D]'>
-            Nuestra propuesta combina diseño contemporáneo, fabricación consistente y una experiencia de compra clara de principio a fin.
+            Nuestra propuesta combina diseño contemporáneo, fabricación
+            consistente y una experiencia de compra clara de principio a fin.
           </p>
         </Reveal>
 
@@ -316,6 +397,7 @@ export default function Landing() {
         >
           {FEATURES.map((feature) => {
             const Icon = feature.icon
+
             return (
               <motion.article
                 key={feature.title}
@@ -326,17 +408,23 @@ export default function Landing() {
                   <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#17191D] text-[#F6D79D] transition-transform duration-300 group-hover:scale-105'>
                     <Icon className='h-5 w-5' />
                   </div>
+
                   <span className='text-xs font-black tracking-[0.18em] text-[#B7B1A6]'>
                     {feature.eyebrow}
                   </span>
                 </div>
+
                 <h3
                   className='mt-8 text-2xl font-bold tracking-tight text-[#17191D]'
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
                   {feature.title}
                 </h3>
-                <p className='mt-3 text-sm leading-7 text-[#69665F]'>{feature.body}</p>
+
+                <p className='mt-3 text-sm leading-7 text-[#69665F]'>
+                  {feature.body}
+                </p>
+
                 <div className='mt-7 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-[#C98A2E]'>
                   <Check className='h-4 w-4' />
                   Hecho para durar en tu espacio
@@ -347,13 +435,17 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      <section className='bg-[#14161B] px-6 py-24 text-[#F7F5EF] sm:py-28'>
+      {/* PROCESS */}
+      <section className='bg-[#FBF9F5] px-6 py-24 text-[#17191D] sm:py-28'>
         <div className='mx-auto max-w-6xl'>
           <Reveal className='max-w-3xl'>
             <SectionLabel>Proceso</SectionLabel>
+
             <SectionHeading>
               Compra simple.
-              <span className='block text-[#F7F5EF]'>Fabricación <Accent>cuidada.</Accent></span>
+              <span className='block text-[#17191D]'>
+                Fabricación <Accent>cuidada.</Accent>
+              </span>
             </SectionHeading>
           </Reveal>
 
@@ -368,32 +460,52 @@ export default function Landing() {
               <motion.article
                 key={item.step}
                 variants={cardVariant}
-                className='rounded-3xl border border-white/10 bg-white/[0.045] p-6 backdrop-blur-sm transition-colors duration-300 hover:border-[#D7A451]/50'
+                className='rounded-3xl border border-[#DDD7CD] bg-white p-6 transition-colors duration-300 hover:border-[#CFA45B]'
               >
-                <div className='text-4xl font-black text-[#D7A451]' style={{ fontFamily: 'var(--font-display)' }}>
+                <div
+                  className='text-4xl font-black text-[#C98A2E]'
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
                   {item.step}
                 </div>
-                <h3 className='mt-8 text-xl font-bold text-white' style={{ fontFamily: 'var(--font-display)' }}>
+
+                <h3
+                  className='mt-8 text-xl font-bold text-[#17191D]'
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
                   {item.title}
                 </h3>
-                <p className='mt-3 text-sm leading-6 text-[#AAA7A0]'>{item.body}</p>
+
+                <p className='mt-3 text-sm leading-6 text-[#69665F]'>
+                  {item.body}
+                </p>
               </motion.article>
             ))}
           </motion.div>
         </div>
       </section>
 
-      <section id='contact' className='bg-[#F5F2EC] px-6 py-24 sm:py-28'>
+      {/* CONTACT */}
+      <section
+        id='contact'
+        className='bg-white px-6 py-24 sm:py-28'
+      >
         <div className='mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center'>
           <Reveal>
             <SectionLabel>Atención directa</SectionLabel>
+
             <SectionHeading>
               Encuentra la lámpara que
-              <span className='block'>haga <Accent>especial tu espacio.</Accent></span>
+              <span className='block'>
+                haga <Accent>especial tu espacio.</Accent>
+              </span>
             </SectionHeading>
+
             <p className='mt-5 max-w-xl text-base leading-7 text-[#66635D]'>
-              Explora nuestra colección o escríbenos para recibir orientación sobre modelos, opciones y disponibilidad.
+              Explora nuestra colección o escríbenos para recibir orientación
+              sobre modelos, opciones y disponibilidad.
             </p>
+
             <div className='mt-8 flex flex-col gap-3 sm:flex-row'>
               <Link
                 to='/catalog'
@@ -402,6 +514,7 @@ export default function Landing() {
                 Explorar lámparas
                 <ArrowRight className='h-4 w-4' />
               </Link>
+
               <a
                 href={WA_HREF}
                 target='_blank'
@@ -417,24 +530,52 @@ export default function Landing() {
           <Reveal delay={0.12}>
             <div className='overflow-hidden rounded-3xl border border-[#DCD5CA] bg-white'>
               <div className='border-b border-[#E7E1D7] px-6 py-5'>
-                <div className='text-xs font-bold uppercase tracking-[0.16em] text-[#A3947D]'>Servicio</div>
-                <div className='mt-1 text-xl font-bold text-[#17191D]' style={{ fontFamily: 'var(--font-display)' }}>
+                <div className='text-xs font-bold uppercase tracking-[0.16em] text-[#A3947D]'>
+                  Servicio
+                </div>
+
+                <div
+                  className='mt-1 text-xl font-bold text-[#17191D]'
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
                   Compra con confianza
                 </div>
               </div>
+
               <div className='divide-y divide-[#EEE9E1]'>
                 {[
-                  { icon: ShieldCheck, title: 'Control de calidad', body: 'Revisamos cada unidad antes del despacho.' },
-                  { icon: PackageCheck, title: 'Empaque cuidado', body: 'Preparamos tu lámpara para un traslado seguro.' },
-                  { icon: Truck, title: 'Envíos nacionales', body: 'Despachos disponibles dentro de Colombia.' },
+                  {
+                    icon: ShieldCheck,
+                    title: 'Control de calidad',
+                    body: 'Revisamos cada unidad antes del despacho.',
+                  },
+                  {
+                    icon: PackageCheck,
+                    title: 'Empaque cuidado',
+                    body: 'Preparamos tu lámpara para un traslado seguro.',
+                  },
+                  {
+                    icon: Truck,
+                    title: 'Envíos nacionales',
+                    body: 'Despachos disponibles dentro de Colombia.',
+                  },
                 ].map(({ icon: Icon, title, body }) => (
-                  <div key={title} className='flex gap-4 px-6 py-5'>
+                  <div
+                    key={title}
+                    className='flex gap-4 px-6 py-5'
+                  >
                     <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
                       <Icon className='h-4.5 w-4.5' />
                     </div>
+
                     <div>
-                      <div className='text-sm font-bold text-[#17191D]'>{title}</div>
-                      <div className='mt-1 text-sm leading-6 text-[#726E67]'>{body}</div>
+                      <div className='text-sm font-bold text-[#17191D]'>
+                        {title}
+                      </div>
+
+                      <div className='mt-1 text-sm leading-6 text-[#726E67]'>
+                        {body}
+                      </div>
                     </div>
                   </div>
                 ))}

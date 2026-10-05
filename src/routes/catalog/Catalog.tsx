@@ -1428,7 +1428,7 @@ function ProductModal({
 
                     >
 
-                      {formatPrice(product.price)}
+                      {formatPrice(product.price)} COP
 
                     </div>
 
@@ -2108,7 +2108,7 @@ function WompiCheckout({
 
           <div className='text-sm font-black text-[#171512]'>
 
-            {formatPrice(product.price)}
+            {formatPrice(product.price)} COP
 
           </div>
 
