@@ -1204,7 +1204,7 @@ function ProductModal({
 
             <div className='border-b border-[#DDD5C8] bg-[#EDE8DF] p-5 sm:p-8 lg:border-b-0 lg:border-r'>
 
-              <div className='relative aspect-square overflow-hidden rounded-[1.5rem] bg-[#E2DCD1]'>
+              <div className='group relative aspect-square overflow-hidden rounded-[1.5rem] bg-[#E2DCD1]'>
 
                 <AnimatePresence mode='wait'>
 
@@ -1248,7 +1248,7 @@ function ProductModal({
 
                       aria-label='Imagen anterior'
 
-                      className='absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/65'
+                      className='absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-black/65 group-hover:opacity-100 focus-visible:opacity-100'
 
                     >
 
@@ -1266,7 +1266,7 @@ function ProductModal({
 
                       aria-label='Siguiente imagen'
 
-                      className='absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/65'
+                      className='absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-black/65 group-hover:opacity-100 focus-visible:opacity-100'
 
                     >
 
