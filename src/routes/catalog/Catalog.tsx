@@ -622,7 +622,7 @@ function ProductModal({
               </div>
 
               {images.length > 1 && (
-                <div className='mt-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                <div className='mt-4 flex flex-wrap gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
                   {images.map((image, index) => (
                     <button
                       key={image}
