@@ -453,10 +453,10 @@ function ProductCard({
 
         <div className='absolute bottom-4 left-5 right-5 flex items-end justify-between gap-3 text-white'>
           <div>
-            <div className='text-6xl font-black tracking-tight md:text-2xl'>
+            <div className='font-black tracking-tight text-2xl'>
               {product.title}
             </div>
-            <div className='mt-1 text-2xl text-white/80 md:text-xs'>
+            <div className='mt-1 text-white/80 text-xs'>
               {product.subtitle}
             </div>
           </div>
