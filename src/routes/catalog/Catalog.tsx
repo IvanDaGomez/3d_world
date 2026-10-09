@@ -283,6 +283,7 @@ export default function Catalog() {
 
   return (
     <div className='min-h-screen bg-stone-100 text-stone-900'>
+      {/* ... Headers de la vista ... */}
       <section className='relative overflow-hidden border-b border-stone-300 bg-stone-900'>
         <div
           aria-hidden='true'
@@ -485,30 +486,23 @@ function ProductModal({
 }) {
   const [currentImage, setCurrentImage] = useState(0)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
-  const [wompiActive, setWompiActive] = useState(false)
   
-  // Referencia para el auto-scroll
   const checkoutRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setCurrentImage(0)
     setCheckoutOpen(false)
-    setWompiActive(false)
 
     if (!product) return
 
-    if (wompiActive) {
-      document.body.style.overflow = ''
-      return
-    }
-
     const previousOverflow = document.body.style.overflow
+    // Bloqueamos el scroll del body solo mientras el ProductModal esté montado.
     document.body.style.overflow = 'hidden'
 
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [product, wompiActive])
+  }, [product])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -524,10 +518,8 @@ function ProductModal({
     }
   }, [onClose, product])
 
-  // Desplazamiento automático al abrir el formulario de pago
   useEffect(() => {
     if (checkoutOpen && checkoutRef.current) {
-      // Pequeño retardo para permitir que framer-motion monte el elemento en el DOM y comience su animación
       const timer = setTimeout(() => {
         checkoutRef.current?.scrollIntoView({
           behavior: 'smooth',
@@ -552,7 +544,6 @@ function ProductModal({
 
   return (
     <AnimatePresence>
-      {/* Se removió padding general en favor de padding vertical estricto para evitar cortes en móviles */}
       <div className='fixed inset-0 z-[100] overflow-y-auto px-4 sm:px-6'>
         <motion.button
           type='button'
@@ -569,8 +560,6 @@ function ProductModal({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.97 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          // El uso de `my-12` (margin-y) en lugar de `mt-4` asegura espacio tanto arriba como ABAJO.
-          // Esto evita que Safari ampute el fondo del modal al hacer scroll.
           className='relative mx-auto my-12 w-full max-w-6xl overflow-hidden rounded-[2rem] bg-stone-50 shadow-2xl'
         >
           <button
@@ -583,6 +572,7 @@ function ProductModal({
           </button>
 
           <div className='grid lg:grid-cols-[1.05fr_0.95fr]'>
+            {/* ... Galería de imágenes ... */}
             <div className='border-b border-stone-300 bg-stone-200 p-5 sm:p-8 lg:border-b-0 lg:border-r'>
               <div className='group relative aspect-square overflow-hidden rounded-[1.5rem] bg-stone-300'>
                 <AnimatePresence mode='wait'>
@@ -730,7 +720,7 @@ function ProductModal({
                       <WompiCheckout
                         product={product}
                         onCancel={() => setCheckoutOpen(false)}
-                        onWompiOpen={() => setWompiActive(true)}
+                        onCloseModal={onClose}
                       />
                     </motion.div>
                   )}
@@ -747,11 +737,11 @@ function ProductModal({
 function WompiCheckout({
   product,
   onCancel,
-  onWompiOpen
+  onCloseModal
 }: {
   product: Product
   onCancel: () => void
-  onWompiOpen: () => void
+  onCloseModal: () => void
 }) {
   const [data, setData] = useState<CheckoutData>({
     name: '',
@@ -858,23 +848,27 @@ function WompiCheckout({
         }
       })
 
-      onWompiOpen()
+      // CERRAR EL MODAL DE REACT: Desmonta el modal, restaura el body overflow nativo, 
+      // limpiando la pantalla completamente antes de abrir Wompi.
+      onCloseModal()
 
-      widget.open(({ transaction }) => {
-        console.log('Wompi transaction:', transaction)
-        const params = new URLSearchParams()
+      // Esperamos un instante minúsculo (150ms) para permitir a React limpiar el DOM, 
+      // retirar las clases fijas del modal y ejecutar los cleanups del body.
+      setTimeout(() => {
+        widget.open(({ transaction }) => {
+          console.log('Wompi transaction:', transaction)
+          const params = new URLSearchParams()
 
-        if (transaction?.id) {
-          params.set('id', transaction.id)
-        }
+          if (transaction?.id) {
+            params.set('id', transaction.id)
+          }
 
-        params.set('reference', checkout.reference)
+          params.set('reference', checkout.reference)
 
-        onCancel()
-        setLoading(false)
+          window.location.href = `${window.location.origin}/payment-successful?${params.toString()}`
+        })
+      }, 150)
 
-        window.location.href = `${window.location.origin}/payment-successful?${params.toString()}`
-      })
     } catch (submitError) {
       setError(
         submitError instanceof Error
