@@ -441,7 +441,7 @@ function ProductCard({
         <img
           src={resolveImageUrl(product.images[0])}
           alt={product.title}
-          className='h-full w-full object-cover transition duration-700 group-hover:scale-[1.045]'
+          className='h-full w-full object-contain transition duration-700 group-hover:scale-[1.045]'
           loading='lazy'
         />
 
@@ -594,7 +594,7 @@ function ProductModal({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.985 }}
                     transition={{ duration: 0.3 }}
-                    className='h-full w-full object-cover'
+                    className='h-full w-full object-contain'
                   />
                 </AnimatePresence>
 
@@ -637,7 +637,7 @@ function ProductModal({
                       <img
                         src={resolveImageUrl(image)}
                         alt={`${product.title} miniatura ${index + 1}`}
-                        className='h-full w-full object-cover'
+                        className='h-full w-full object-contain'
                       />
                     </button>
                   ))}
