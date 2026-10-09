@@ -64,24 +64,34 @@
   --color-particle-edge:       #5C8AFF;   /* Outer haze particles */
   --color-particle-fog:        #8FB0FF;   /* Scene fog color */
 
-  /* ─── Spacing scale ─── */
-  --spacing-xsmall: calc(0.2rem + 0.1vw);
-  --spacing-small:  calc(var(--spacing-xsmall) * 1.6);
-  --spacing-medium: calc(var(--spacing-small)  * 1.6);
-  --spacing-large:  calc(var(--spacing-medium) * 1.6);
+  /* ─── Spacing scale (Fluid) ─── */
+  /* min: 16px, ideal: grows with viewport, max: 24px */
+  --spacing-base: clamp(1rem, 0.8rem + 1vw, 1.5rem); 
+  
+  --spacing-xsmall: calc(var(--spacing-base) * 0.25);
+  --spacing-small:  calc(var(--spacing-base) * 0.5);
+  --spacing-medium: var(--spacing-base);
+  --spacing-large:  calc(var(--spacing-base) * 1.5);
+  --spacing-xlarge: calc(var(--spacing-base) * 2.5);
 
-  /* ─── Type scale ─── */
-  --font-size-xsmall: calc(0.15rem + 0.2vw);
-  --font-size-small:  calc(var(--font-size-xsmall) * 1.6);
-  --font-size-medium: calc(var(--font-size-small)  * 1.6);
+  /* ─── Type scale (Fluid Typography) ─── */
+  /* clamp(móvil, cálculo dinámico, escritorio) */
+  --font-size-xsmall: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem); /* ~12px a 14px */
+  --font-size-small:  clamp(0.875rem, 0.8rem + 0.375vw, 1rem);   /* ~14px a 16px */
+  --font-size-medium: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);     /* ~16px a 18px (Cuerpo de texto base) */
+  --font-size-large:  clamp(1.125rem, 1rem + 0.625vw, 1.375rem); /* ~18px a 22px */
+  --font-size-xlarge: clamp(1.25rem, 1.1rem + 1vw, 1.75rem);     /* ~20px a 28px */
+  --font-size-title:  clamp(1.75rem, 1.3rem + 2.25vw, 3rem);     /* ~28px a 48px (Títulos principales) */
 
-  --radius-card: calc((0.2rem + 0.1vw) * 1.6 * 1.6);
+  --radius-card: 1.5rem; /* Ajustado a un valor estático robusto para bordes */
 }
+
 :root {
   font-family: 'Inter', sans-serif;
   font-size: var(--font-size-medium);
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-current-text-primary);
   background-color: var(--color-current-background);
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased; /* Mejora renderizado en móviles/Mac */
 }
