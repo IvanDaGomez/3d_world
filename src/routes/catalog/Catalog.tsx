@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, useRef, type FormEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -468,7 +468,7 @@ function ProductCard({
       </div>
 
       <div className='flex items-center justify-between gap-4 px-5 py-4'>
-        <span className='shrink-0 text-5xl font-bold text-stone-900 md:text-sm'>
+        <span className='shrink-0 font-bold text-stone-900 text-sm'>
           {formatPrice(product.price)}
         </span>
       </div>
@@ -486,6 +486,9 @@ function ProductModal({
   const [currentImage, setCurrentImage] = useState(0)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [wompiActive, setWompiActive] = useState(false)
+  
+  // Referencia para el auto-scroll
+  const checkoutRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setCurrentImage(0)
@@ -494,7 +497,6 @@ function ProductModal({
 
     if (!product) return
 
-    // CRÍTICO: Si Wompi está abriéndose, liberamos el body para que el iframe superpuesto en iOS pueda hacer scroll.
     if (wompiActive) {
       document.body.style.overflow = ''
       return
@@ -522,6 +524,20 @@ function ProductModal({
     }
   }, [onClose, product])
 
+  // Desplazamiento automático al abrir el formulario de pago
+  useEffect(() => {
+    if (checkoutOpen && checkoutRef.current) {
+      // Pequeño retardo para permitir que framer-motion monte el elemento en el DOM y comience su animación
+      const timer = setTimeout(() => {
+        checkoutRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }, 150)
+      return () => clearTimeout(timer)
+    }
+  }, [checkoutOpen])
+
   if (!product) return null
 
   const images = product.images
@@ -536,7 +552,8 @@ function ProductModal({
 
   return (
     <AnimatePresence>
-      <div className='fixed inset-0 z-[100] overflow-y-auto p-4 sm:p-6'>
+      {/* Se removió padding general en favor de padding vertical estricto para evitar cortes en móviles */}
+      <div className='fixed inset-0 z-[100] overflow-y-auto px-4 sm:px-6'>
         <motion.button
           type='button'
           aria-label='Cerrar producto'
@@ -552,7 +569,9 @@ function ProductModal({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.97 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className='relative mx-auto mt-4 w-full max-w-6xl overflow-hidden rounded-[2rem] bg-stone-50 shadow-2xl sm:mt-10'
+          // El uso de `my-12` (margin-y) en lugar de `mt-4` asegura espacio tanto arriba como ABAJO.
+          // Esto evita que Safari ampute el fondo del modal al hacer scroll.
+          className='relative mx-auto my-12 w-full max-w-6xl overflow-hidden rounded-[2rem] bg-stone-50 shadow-2xl'
         >
           <button
             type='button'
@@ -679,7 +698,7 @@ function ProductModal({
                   <button
                     type='button'
                     onClick={() => setCheckoutOpen(true)}
-                    disabled={!product.price || product.price <= 0}
+                    disabled={!product.price || product.price <= 0 || checkoutOpen}
                     className='inline-flex h-14 items-center gap-2.5 rounded-full bg-stone-900 px-6 text-sm font-bold text-white transition hover:bg-amber-500 hover:text-stone-900 disabled:cursor-not-allowed disabled:bg-stone-400'
                   >
                     <ShoppingBag className='h-4 w-4' />
@@ -702,6 +721,7 @@ function ProductModal({
                 <AnimatePresence>
                   {checkoutOpen && (
                     <motion.div
+                      ref={checkoutRef}
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
@@ -838,7 +858,6 @@ function WompiCheckout({
         }
       })
 
-      // Liberar el scroll del body del dispositivo móvil
       onWompiOpen()
 
       widget.open(({ transaction }) => {
