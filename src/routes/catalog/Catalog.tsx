@@ -267,7 +267,7 @@ const BTN_BASE = `inline-flex items-center justify-center gap-2 rounded-full fon
 
 const BTN_PRIMARY = 'bg-[#1D1D1F] text-white hover:bg-[#3A3A3C]'
 
-const BTN_SECONDARY = 'bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10'
+
 export default function Catalog() {
   const [products] = useState<Product[]>(() => shuffle(PRODUCTS))
   const [search, setSearch] = useState('')
