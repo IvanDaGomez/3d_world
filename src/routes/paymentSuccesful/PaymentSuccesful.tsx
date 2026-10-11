@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { MotionConfig, motion, type Transition } from 'framer-motion'
 import {
   ArrowLeft,
   Check,
@@ -55,6 +55,38 @@ const normalizeStatus = (
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Design tokens                                                             */
+/*  ink       #1D1D1F  primary text / primary button                          */
+/*  muted     #6E6E73  secondary text                                         */
+/*  surface   #F5F5F7  grouped background                                     */
+/*  accent-tx #96600F  brand text (AA on white and on surface)                */
+/*  success   #248A3D  /  danger #D70015  (icon fills)                        */
+/* -------------------------------------------------------------------------- */
+
+const FONT_STACK = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif`
+
+/* Critically damped springs: nothing here carries momentum, so nothing
+   overshoots. They retarget from the live value, so a status change mid-motion
+   never jumps. */
+const PRESS_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.3 }
+
+const SETTLE_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.5 }
+
+/* Press feedback begins on pointer-down and is reversible mid-press. */
+const PRESS = {
+  whileTap: { scale: 0.97 },
+  transition: PRESS_SPRING
+} as const
+
+const FOCUS =
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96600F]'
+
+const BTN_BASE = `inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[1.0625rem] font-medium tracking-[-0.005em] transition-colors duration-200 ${FOCUS}`
+
+const BTN_PRIMARY = 'bg-[#1D1D1F] text-white hover:bg-[#3A3A3C]'
+
+const BTN_SECONDARY = 'bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10'
 export default function PaymentSuccessful() {
   const [searchParams] = useSearchParams()
 
@@ -224,291 +256,319 @@ export default function PaymentSuccessful() {
     status === 'error'
 
   return (
-    <div className='min-h-screen bg-[#F4F1EA] text-[#171512]'>
-
-
-      {/* MAIN */}
-      <main className='relative flex min-h-[calc(100vh-81px)] items-center overflow-hidden px-6 py-16 lg:px-10'>
-        <div
-          aria-hidden='true'
-          className='pointer-events-none absolute inset-0'
-          style={{
-            background:
-              'radial-gradient(circle at 50% 18%, rgba(215,164,81,.14), transparent 34%), radial-gradient(circle at 90% 90%, rgba(215,164,81,.08), transparent 30%)'
-          }}
-        />
-
-        <div className='relative mx-auto w-full max-w-4xl'>
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20
-            }}
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
-            transition={{
-              duration: 0.5
-            }}
-            className='overflow-hidden rounded-[2rem] border border-[#D9D1C2] bg-[#F8F5EF] shadow-[0_35px_100px_rgba(34,29,20,0.14)]'
-          >
-            {/* STATUS HERO */}
-            <div className='bg-[#171512] px-6 py-16 text-center sm:px-12'>
-              <motion.div
-                key={status}
-                initial={{
-                  opacity: 0,
-                  scale: 0.9
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1
-                }}
-                className='mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-white/[0.07]'
+    // Reduced motion: transforms are dropped, opacity fades are kept.
+    <MotionConfig reducedMotion='user'>
+      <div
+        className='min-h-screen bg-[#F5F5F7] text-[#1D1D1F] antialiased [font-optical-sizing:auto]'
+        style={{ fontFamily: FONT_STACK }}
+      >
+        {/* MAIN */}
+        <main className='relative flex min-h-[calc(100vh-81px)] items-center overflow-hidden px-6 py-16 lg:px-10'>
+          <div className='relative mx-auto w-full max-w-4xl'>
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20
+              }}
+              animate={{
+                opacity: 1,
+                y: 0
+              }}
+              transition={{
+                y: SETTLE_SPRING,
+                opacity: { duration: 0.4, ease: 'easeOut' }
+              }}
+              className='overflow-hidden rounded-[28px] bg-white shadow-[0_24px_70px_rgba(0,0,0,0.08)]'
+            >
+              {/* STATUS HERO */}
+              <div
+                aria-live='polite'
+                className='px-6 pb-4 pt-16 text-center sm:px-12'
               >
-                {status === 'approved' ? (
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-[#3D8A5A] text-white'>
+                <motion.div
+                  key={status}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.9
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1
+                  }}
+                  transition={{
+                    scale: SETTLE_SPRING,
+                    opacity: { duration: 0.25, ease: 'easeOut' }
+                  }}
+                  className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${
+                    status === 'approved'
+                      ? 'bg-[#248A3D] text-white'
+                      : isNegative
+                        ? 'bg-[#D70015] text-white'
+                        : status === 'pending'
+                          ? 'bg-[#C98A2E]/20 text-[#96600F]'
+                          : 'bg-[#F5F5F7] text-[#6E6E73]'
+                  }`}
+                >
+                  {status === 'approved' ? (
                     <Check
-                      className='h-8 w-8'
+                      className='h-10 w-10'
                       strokeWidth={2.5}
+                      aria-hidden='true'
                     />
-                  </div>
-                ) : isNegative ? (
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-[#9A4B3F] text-white'>
+                  ) : isNegative ? (
                     <X
-                      className='h-7 w-7'
+                      className='h-9 w-9'
                       strokeWidth={2.5}
+                      aria-hidden='true'
                     />
-                  </div>
-                ) : status === 'pending' ? (
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-[#D7A451] text-[#171512]'>
-                    <Clock3 className='h-7 w-7' />
-                  </div>
-                ) : (
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-[#F6D79D]'>
-                    <Loader2 className='h-7 w-7 animate-spin' />
-                  </div>
-                )}
-              </motion.div>
+                  ) : status === 'pending' ? (
+                    <Clock3 className='h-9 w-9' aria-hidden='true' />
+                  ) : (
+                    <Loader2
+                      className='h-9 w-9 animate-spin'
+                      aria-hidden='true'
+                    />
+                  )}
+                </motion.div>
 
-              <div className='mt-7 text-[10px] font-bold uppercase tracking-[0.22em] text-[#D7A451]'>
-                Estado del pago
+                <div className='mt-7 text-[0.9375rem] font-semibold leading-snug text-[#6E6E73]'>
+                  Estado del pago
+                </div>
+
+                <motion.h1
+                  key={`${status}-title`}
+                  initial={{
+                    opacity: 0,
+                    y: 8
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }}
+                  transition={{
+                    y: SETTLE_SPRING,
+                    opacity: { duration: 0.25, ease: 'easeOut' }
+                  }}
+                  className='mt-2 text-[clamp(2.25rem,5vw,3.25rem)] font-semibold leading-[1.06] tracking-[-0.028em] text-[#1D1D1F]'
+                >
+                  {title}
+                </motion.h1>
+
+                <p className='mx-auto mt-4 max-w-2xl text-[1.0625rem] leading-[1.47] text-[#6E6E73] sm:text-xl sm:leading-[1.4]'>
+                  {description}
+                </p>
               </div>
 
-              <motion.h1
-                key={`${status}-title`}
-                initial={{
-                  opacity: 0,
-                  y: 8
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0
-                }}
-                className='mt-3 text-4xl font-black tracking-[-0.04em] text-[#F7F5EF] sm:text-5xl'
-                style={{
-                  fontFamily:
-                    'var(--font-display)'
-                }}
-              >
-                {title}
-              </motion.h1>
-
-              <p className='mx-auto mt-5 max-w-2xl text-base leading-7 text-[#CBC7BF]'>
-                {description}
-              </p>
-            </div>
-
-            {/* DETAILS */}
-            <div className='p-6 sm:p-10 lg:p-12'>
-              <div className='grid gap-4 sm:grid-cols-2'>
-                <InfoCard
-                  label='Referencia de compra'
-                  value={
-                    paymentReference ||
-                    'No disponible'
-                  }
-                />
-
-                <InfoCard
-                  label='Transacción Wompi'
-                  value={
-                    transactionId ||
-                    'No disponible'
-                  }
-                />
-
-                {orderId && (
+              {/* DETAILS */}
+              <div className='p-6 sm:p-10 lg:p-12'>
+                <div className='grid gap-3 sm:grid-cols-2'>
                   <InfoCard
-                    label='Pedido'
-                    value={orderId}
-                  />
-                )}
-              </div>
-
-              {/* CHECKING */}
-              {status === 'checking' && (
-                <div className='mt-8 rounded-2xl border border-[#D9D1C2] bg-white px-5 py-4'>
-                  <div className='flex items-start gap-3'>
-                    <Loader2 className='mt-0.5 h-5 w-5 shrink-0 animate-spin text-[#AE8243]' />
-
-                    <div>
-                      <div className='text-sm font-bold text-[#171512]'>
-                        Estamos verificando tu pago
-                      </div>
-
-                      <p className='mt-1 text-sm leading-6 text-[#716C63]'>
-                        No vuelvas a realizar el pago mientras
-                        confirmamos la transacción.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* PENDING */}
-              {status === 'pending' && (
-                <div className='mt-8 rounded-2xl border border-[#E2D2A5] bg-[#FFF9E9] px-5 py-4'>
-                  <div className='flex items-start gap-3'>
-                    <Clock3 className='mt-0.5 h-5 w-5 shrink-0 text-[#AE8243]' />
-
-                    <div>
-                      <div className='text-sm font-bold text-[#171512]'>
-                        El pago está siendo procesado
-                      </div>
-
-                      <p className='mt-1 text-sm leading-6 text-[#716C63]'>
-                        Estamos esperando la confirmación final de
-                        Wompi.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* APPROVED */}
-              {status === 'approved' && (
-                <div className='mt-8 rounded-2xl border border-[#BFD8C7] bg-[#F3FAF5] px-5 py-4'>
-                  <div className='flex items-start gap-3'>
-                    <Check className='mt-0.5 h-5 w-5 shrink-0 text-[#3D8A5A]' />
-
-                    <div>
-                      <div className='text-sm font-bold text-[#171512]'>
-                        Tu compra está confirmada
-                      </div>
-
-                      <p className='mt-1 text-sm leading-6 text-[#5F665F]'>
-                        Guarda tu referencia de compra. La
-                        utilizaremos para identificar tu pedido.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* DECLINED / VOIDED */}
-              {(status === 'declined' ||
-                status === 'voided') && (
-                <div className='mt-8 rounded-2xl border border-[#E6B5AE] bg-[#FFF5F2] px-5 py-4'>
-                  <div className='flex items-start gap-3'>
-                    <X className='mt-0.5 h-5 w-5 shrink-0 text-[#9A4B3F]' />
-
-                    <div>
-                      <div className='text-sm font-bold text-[#171512]'>
-                        No se completó el pago
-                      </div>
-
-                      <p className='mt-1 text-sm leading-6 text-[#716C63]'>
-                        Puedes regresar al catálogo y comenzar un
-                        nuevo intento.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ERROR */}
-              {status === 'error' && (
-                <div className='mt-8 rounded-2xl border border-[#E6B5AE] bg-[#FFF5F2] px-5 py-4'>
-                  <div className='flex items-start gap-3'>
-                    <X className='mt-0.5 h-5 w-5 shrink-0 text-[#9A4B3F]' />
-
-                    <div>
-                      <div className='text-sm font-bold text-[#171512]'>
-                        No pudimos verificar el estado
-                      </div>
-
-                      <p className='mt-1 text-sm leading-6 text-[#716C63]'>
-                        Esto no significa necesariamente que el pago
-                        haya fallado. Puedes volver a consultar el
-                        estado.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {error &&
-                status !== 'error' && (
-                  <div className='mt-4 text-sm text-[#8B443A]'>
-                    {error}
-                  </div>
-                )}
-
-              {/* ACTIONS */}
-              <div className='mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center'>
-                {(status === 'error' ||
-                  status === 'declined' ||
-                  status === 'voided') && (
-                  <button
-                    type='button'
-                    onClick={() =>
-                      window.location.reload()
+                    label='Referencia de compra'
+                    value={
+                      paymentReference ||
+                      'No disponible'
                     }
-                    className='inline-flex h-13 items-center justify-center gap-2 rounded-full border border-[#D9D1C2] bg-white px-6 text-sm font-bold text-[#171512] transition hover:bg-[#F4F1EA]'
-                  >
-                    <RefreshCw className='h-4 w-4' />
-                    Volver a verificar
-                  </button>
+                  />
+
+                  <InfoCard
+                    label='Transacción Wompi'
+                    value={
+                      transactionId ||
+                      'No disponible'
+                    }
+                  />
+
+                  {orderId && (
+                    <InfoCard
+                      label='Pedido'
+                      value={orderId}
+                    />
+                  )}
+                </div>
+
+                {/* CHECKING */}
+                {status === 'checking' && (
+                  <div className='mt-6 rounded-2xl bg-[#F5F5F7] px-5 py-4'>
+                    <div className='flex items-start gap-3'>
+                      <Loader2
+                        className='mt-0.5 h-5 w-5 shrink-0 animate-spin text-[#6E6E73]'
+                        aria-hidden='true'
+                      />
+
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+                          Estamos verificando tu pago
+                        </div>
+
+                        <p className='mt-1 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                          No vuelvas a realizar el pago mientras
+                          confirmamos la transacción.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 )}
 
-                <Link
-                  to='/catalog'
-                  className='inline-flex h-13 items-center justify-center gap-2 rounded-full bg-[#171512] px-7 text-sm font-bold text-white transition hover:bg-[#D7A451] hover:text-[#171512]'
-                >
-                  <ShoppingBag className='h-4 w-4' />
-                  Ver catálogo
-                </Link>
+                {/* PENDING */}
+                {status === 'pending' && (
+                  <div className='mt-6 rounded-2xl bg-[#FFF4DB] px-5 py-4'>
+                    <div className='flex items-start gap-3'>
+                      <Clock3
+                        className='mt-0.5 h-5 w-5 shrink-0 text-[#96600F]'
+                        aria-hidden='true'
+                      />
 
-                <Link
-                  to='/'
-                  className='inline-flex h-13 items-center justify-center gap-2 rounded-full border border-[#D9D1C2] bg-white px-6 text-sm font-bold text-[#4D4942] transition hover:bg-[#F4F1EA]'
-                >
-                  <Home className='h-4 w-4' />
-                  Inicio
-                </Link>
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+                          El pago está siendo procesado
+                        </div>
+
+                        <p className='mt-1 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                          Estamos esperando la confirmación final de
+                          Wompi.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* APPROVED */}
+                {status === 'approved' && (
+                  <div className='mt-6 rounded-2xl bg-[#E8F5EC] px-5 py-4'>
+                    <div className='flex items-start gap-3'>
+                      <Check
+                        className='mt-0.5 h-5 w-5 shrink-0 text-[#248A3D]'
+                        aria-hidden='true'
+                      />
+
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+                          Tu compra está confirmada
+                        </div>
+
+                        <p className='mt-1 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                          Guarda tu referencia de compra. La
+                          utilizaremos para identificar tu pedido.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* DECLINED / VOIDED */}
+                {(status === 'declined' ||
+                  status === 'voided') && (
+                  <div className='mt-6 rounded-2xl bg-[#FDECEA] px-5 py-4'>
+                    <div className='flex items-start gap-3'>
+                      <X
+                        className='mt-0.5 h-5 w-5 shrink-0 text-[#B00012]'
+                        aria-hidden='true'
+                      />
+
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+                          No se completó el pago
+                        </div>
+
+                        <p className='mt-1 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                          Puedes regresar al catálogo y comenzar un
+                          nuevo intento.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ERROR */}
+                {status === 'error' && (
+                  <div className='mt-6 rounded-2xl bg-[#FDECEA] px-5 py-4'>
+                    <div className='flex items-start gap-3'>
+                      <X
+                        className='mt-0.5 h-5 w-5 shrink-0 text-[#B00012]'
+                        aria-hidden='true'
+                      />
+
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+                          No pudimos verificar el estado
+                        </div>
+
+                        <p className='mt-1 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                          Esto no significa necesariamente que el pago
+                          haya fallado. Puedes volver a consultar el
+                          estado.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {error &&
+                  status !== 'error' && (
+                    <div className='mt-4 text-[0.9375rem] text-[#B00012]'>
+                      {error}
+                    </div>
+                  )}
+
+                {/* ACTIONS */}
+                <div className='mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center'>
+                  {(status === 'error' ||
+                    status === 'declined' ||
+                    status === 'voided') && (
+                    <motion.button
+                      type='button'
+                      onClick={() =>
+                        window.location.reload()
+                      }
+                      {...PRESS}
+                      className={`${BTN_BASE} ${BTN_SECONDARY}`}
+                    >
+                      <RefreshCw className='h-4 w-4' aria-hidden='true' />
+                      Volver a verificar
+                    </motion.button>
+                  )}
+
+                  <motion.div className='flex' {...PRESS}>
+                    <Link
+                      to='/catalog'
+                      className={`w-full ${BTN_BASE} ${BTN_PRIMARY}`}
+                    >
+                      <ShoppingBag className='h-4 w-4' aria-hidden='true' />
+                      Ver catálogo
+                    </Link>
+                  </motion.div>
+
+                  <motion.div className='flex' {...PRESS}>
+                    <Link
+                      to='/'
+                      className={`w-full ${BTN_BASE} ${BTN_SECONDARY}`}
+                    >
+                      <Home className='h-4 w-4' aria-hidden='true' />
+                      Inicio
+                    </Link>
+                  </motion.div>
+                </div>
+
+                {/* FOOTER */}
+                <div className='mt-10 flex flex-col items-center justify-between gap-3 text-center text-[0.8125rem] tracking-[0.01em] text-[#6E6E73] sm:flex-row sm:text-left'>
+                  <span>
+                    Pago procesado mediante Wompi
+                  </span>
+
+                  <Link
+                    to='/catalog'
+                    className={`inline-flex min-h-11 items-center gap-1.5 font-medium text-[#96600F] transition-opacity duration-200 hover:opacity-70 ${FOCUS}`}
+                  >
+                    <ArrowLeft className='h-3.5 w-3.5' aria-hidden='true' />
+                    Volver a la colección
+                  </Link>
+                </div>
               </div>
-
-              {/* FOOTER */}
-              <div className='mt-10 flex flex-col items-center justify-between gap-3 border-t border-[#DDD5C8] pt-6 text-center text-xs text-[#858078] sm:flex-row sm:text-left'>
-                <span>
-                  Pago procesado mediante Wompi
-                </span>
-
-                <Link
-                  to='/catalog'
-                  className='inline-flex items-center gap-1.5 font-semibold text-[#8D6C39] transition hover:text-[#171512]'
-                >
-                  <ArrowLeft className='h-3.5 w-3.5' />
-                  Volver a la colección
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </main>
-    </div>
+            </motion.div>
+          </div>
+        </main>
+      </div>
+    </MotionConfig>
   )
 }
 
@@ -520,12 +580,12 @@ function InfoCard({
   value: string
 }) {
   return (
-    <div className='rounded-2xl border border-[#D9D1C2] bg-white p-4'>
-      <div className='text-[10px] font-bold uppercase tracking-[0.18em] text-[#9A9388]'>
+    <div className='rounded-2xl bg-[#F5F5F7] p-4'>
+      <div className='text-[0.8125rem] font-medium tracking-[0.01em] text-[#6E6E73]'>
         {label}
       </div>
 
-      <div className='mt-2 break-all text-sm font-semibold text-[#171512]'>
+      <div className='mt-1.5 break-all text-[0.9375rem] font-semibold text-[#1D1D1F]'>
         {value}
       </div>
     </div>

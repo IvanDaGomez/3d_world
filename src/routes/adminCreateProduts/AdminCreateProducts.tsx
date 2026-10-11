@@ -8,6 +8,7 @@ import {
   Upload,
   X
 } from 'lucide-react'
+import { MotionConfig, motion, type Transition } from 'framer-motion'
 
 type Category =
   | 'Moderno'
@@ -90,6 +91,53 @@ const formatPrice = (value: string) => {
   }).format(price)
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Design tokens                                                             */
+/*  ink       #1D1D1F  primary text / primary button                          */
+/*  muted     #6E6E73  secondary text                                         */
+/*  surface   #F5F5F7  grouped background / field fill                        */
+/*  accent-tx #96600F  brand text (AA on white and on surface)                */
+/*  success   #248A3D  /  danger #D70015                                      */
+/* -------------------------------------------------------------------------- */
+
+const FONT_STACK = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif`
+
+/* Critically damped springs: nothing here carries momentum, so nothing
+   overshoots. They retarget from the live value, so every motion can be
+   interrupted without a jump. */
+const PRESS_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.3 }
+
+/* Press feedback begins on pointer-down and is reversible mid-press. */
+const PRESS = {
+  whileTap: { scale: 0.97 },
+  transition: PRESS_SPRING
+} as const
+
+const FOCUS =
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96600F]'
+
+/* Translucent material falls back to solid when transparency is reduced. */
+const GLASS_LIGHT =
+  'bg-white/70 backdrop-blur-md [@media(prefers-reduced-transparency:reduce)]:bg-white [@media(prefers-reduced-transparency:reduce)]:backdrop-blur-none'
+
+const BTN_BASE = `inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[1.0625rem] font-medium tracking-[-0.005em] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`
+
+const BTN_PRIMARY = 'bg-[#1D1D1F] text-white hover:bg-[#3A3A3C]'
+
+/* 16px field text so iOS never zooms on focus. */
+const INPUT_CLS =
+  'w-full rounded-xl bg-[#F5F5F7] px-4 text-base tracking-[-0.005em] text-[#1D1D1F] outline-none transition-shadow duration-200 placeholder:text-[#8E8E93] focus:ring-2 focus:ring-[#96600F]'
+
+const LABEL_CLS =
+  'mb-2 block text-[0.8125rem] font-medium tracking-[0.01em] text-[#6E6E73]'
+
+const CARD_CLS = 'rounded-[28px] bg-white p-6 sm:p-8'
+
+const EYEBROW_CLS =
+  'text-[0.9375rem] font-semibold leading-snug text-[#96600F]'
+
+const H2_CLS =
+  'mt-1 text-2xl font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'
 export default function AdminProducts() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -500,455 +548,450 @@ export default function AdminProducts() {
     }
   }
 
+  const pickerDisabled = images.length >= MAX_IMAGES || loading
+
   return (
-    <main className='min-h-screen bg-[#F4EFE6] px-5 py-10 text-[#171512] sm:px-8 lg:px-12'>
-      <div className='mx-auto max-w-7xl'>
-        {/* HEADER */}
-        <div className='mb-10'>
-          <div className='text-[10px] font-bold uppercase tracking-[0.25em] text-[#AE8243]'>
-            Vanguard · Administración
+    // Reduced motion: transforms are dropped, opacity fades are kept.
+    <MotionConfig reducedMotion='user'>
+      <main
+        className='min-h-screen bg-[#F5F5F7] px-5 py-10 text-[#1D1D1F] antialiased [font-optical-sizing:auto] sm:px-8 lg:px-12'
+        style={{ fontFamily: FONT_STACK }}
+      >
+        <div className='mx-auto max-w-7xl'>
+          {/* HEADER */}
+          <div className='mb-10'>
+            <div className={EYEBROW_CLS}>
+              Vanguard · Administración
+            </div>
+
+            <h1 className='mt-2 text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.028em]'>
+              Nuevo producto
+            </h1>
+
+            <p className='mt-3 max-w-2xl text-[1.0625rem] leading-[1.47] text-[#6E6E73]'>
+              Agrega una nueva lámpara al catálogo y sube
+              directamente sus fotografías a almacenamiento
+              seguro.
+            </p>
           </div>
 
-          <h1
-            className='mt-3 text-4xl font-black tracking-tight sm:text-5xl'
-            style={{
-              fontFamily: 'var(--font-display)'
-            }}
-          >
-            Nuevo producto
-          </h1>
-
-          <p className='mt-3 max-w-2xl text-sm leading-6 text-[#6F695F]'>
-            Agrega una nueva lámpara al catálogo y sube
-            directamente sus fotografías a almacenamiento
-            seguro.
-          </p>
-        </div>
-
-        <form onSubmit={submit}>
-          <div className='grid gap-8 lg:grid-cols-[1fr_430px]'>
-            {/* LEFT */}
-            <div className='space-y-6'>
-              {/* SECURITY */}
-              <section className='rounded-[2rem] border border-[#D9D0C0] bg-white p-6 shadow-[0_18px_50px_rgba(23,21,18,0.05)]'>
-                <div className='mb-5'>
-                  <div className='text-[10px] font-bold uppercase tracking-[0.2em] text-[#AE8243]'>
-                    Seguridad
-                  </div>
-
-                  <h2
-                    className='mt-2 text-xl font-black'
-                    style={{
-                      fontFamily:
-                        'var(--font-display)'
-                    }}
-                  >
-                    Acceso administrativo
-                  </h2>
-                </div>
-
-                <input
-                  type='password'
-                  value={adminKey}
-                  onChange={event =>
-                    setAdminKey(event.target.value)
-                  }
-                  placeholder='Clave administrativa'
-                  autoComplete='current-password'
-                  className='h-12 w-full rounded-xl border border-[#D9D0C0] bg-[#FBF9F5] px-4 text-sm outline-none transition focus:border-[#AE8243] focus:ring-2 focus:ring-[#D7A451]/20'
-                />
-              </section>
-
-              {/* PRODUCT */}
-              <section className='rounded-[2rem] border border-[#D9D0C0] bg-white p-6 shadow-[0_18px_50px_rgba(23,21,18,0.05)]'>
-                <div className='mb-6'>
-                  <div className='text-[10px] font-bold uppercase tracking-[0.2em] text-[#AE8243]'>
-                    Producto
-                  </div>
-
-                  <h2
-                    className='mt-2 text-xl font-black'
-                    style={{
-                      fontFamily:
-                        'var(--font-display)'
-                    }}
-                  >
-                    Información de la lámpara
-                  </h2>
-                </div>
-
-                <div className='space-y-5'>
-                  <Field
-                    label='Título'
-                    placeholder='Ej. VoroGlow'
-                    value={form.title}
-                    onChange={value =>
-                      updateField('title', value)
-                    }
-                  />
-
-                  <Field
-                    label='Subtítulo'
-                    placeholder='Ej. Diseño contemporáneo'
-                    value={form.subtitle}
-                    onChange={value =>
-                      updateField('subtitle', value)
-                    }
-                  />
-
-                  <div>
-                    <label className='mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-[#7B756C]'>
-                      Descripción
-                    </label>
-
-                    <textarea
-                      rows={6}
-                      value={form.description}
-                      onChange={event =>
-                        updateField(
-                          'description',
-                          event.target.value
-                        )
-                      }
-                      placeholder='Describe el diseño, materiales, ambiente y características...'
-                      className='w-full resize-y rounded-xl border border-[#D9D0C0] bg-[#FBF9F5] px-4 py-3 text-sm leading-6 outline-none transition focus:border-[#AE8243] focus:ring-2 focus:ring-[#D7A451]/20'
-                    />
-                  </div>
-
-                  <div className='grid gap-4 sm:grid-cols-2'>
-                    <div>
-                      <label className='mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-[#7B756C]'>
-                        Categoría
-                      </label>
-
-                      <select
-                        value={form.category}
-                        onChange={event =>
-                          updateField(
-                            'category',
-                            event.target.value as Category
-                          )
-                        }
-                        className='h-12 w-full rounded-xl border border-[#D9D0C0] bg-[#FBF9F5] px-4 text-sm outline-none focus:border-[#AE8243]'
-                      >
-                        {CATEGORIES.map(category => (
-                          <option
-                            key={category}
-                            value={category}
-                          >
-                            {category}
-                          </option>
-                        ))}
-                      </select>
+          <form onSubmit={submit}>
+            <div className='grid gap-8 lg:grid-cols-[1fr_430px]'>
+              {/* LEFT */}
+              <div className='space-y-6'>
+                {/* SECURITY */}
+                <section className={CARD_CLS}>
+                  <div className='mb-5'>
+                    <div className={EYEBROW_CLS}>
+                      Seguridad
                     </div>
+
+                    <h2 className={H2_CLS}>
+                      Acceso administrativo
+                    </h2>
+                  </div>
+
+                  <input
+                    type='password'
+                    value={adminKey}
+                    onChange={event =>
+                      setAdminKey(event.target.value)
+                    }
+                    placeholder='Clave administrativa'
+                    autoComplete='current-password'
+                    className={`h-12 ${INPUT_CLS}`}
+                  />
+                </section>
+
+                {/* PRODUCT */}
+                <section className={CARD_CLS}>
+                  <div className='mb-6'>
+                    <div className={EYEBROW_CLS}>
+                      Producto
+                    </div>
+
+                    <h2 className={H2_CLS}>
+                      Información de la lámpara
+                    </h2>
+                  </div>
+
+                  <div className='space-y-5'>
+                    <Field
+                      label='Título'
+                      placeholder='Ej. VoroGlow'
+                      value={form.title}
+                      onChange={value =>
+                        updateField('title', value)
+                      }
+                    />
 
                     <Field
-                      label='Precio (COP)'
-                      type='number'
-                      min='0'
-                      placeholder='79900'
-                      value={form.price}
+                      label='Subtítulo'
+                      placeholder='Ej. Diseño contemporáneo'
+                      value={form.subtitle}
                       onChange={value =>
-                        updateField('price', value)
-                      }
-                    />
-                  </div>
-
-                  <div className='grid gap-3 sm:grid-cols-2'>
-                    <Toggle
-                      label='Producto destacado'
-                      checked={form.featured}
-                      onChange={value =>
-                        updateField(
-                          'featured',
-                          value
-                        )
+                        updateField('subtitle', value)
                       }
                     />
 
-                    <Toggle
-                      label='Producto popular'
-                      checked={form.popular}
-                      onChange={value =>
-                        updateField(
-                          'popular',
-                          value
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-              </section>
+                    <div>
+                      <label className={LABEL_CLS}>
+                        Descripción
+                      </label>
 
-              {/* IMAGES */}
-              <section className='rounded-[2rem] border border-[#D9D0C0] bg-white p-6 shadow-[0_18px_50px_rgba(23,21,18,0.05)]'>
-                <div className='mb-6 flex items-start justify-between gap-4'>
-                  <div>
-                    <div className='text-[10px] font-bold uppercase tracking-[0.2em] text-[#AE8243]'>
-                      Fotografías
+                      <textarea
+                        rows={6}
+                        value={form.description}
+                        onChange={event =>
+                          updateField(
+                            'description',
+                            event.target.value
+                          )
+                        }
+                        placeholder='Describe el diseño, materiales, ambiente y características...'
+                        className={`resize-y py-3 leading-[1.5] ${INPUT_CLS}`}
+                      />
                     </div>
 
-                    <h2
-                      className='mt-2 text-xl font-black'
-                      style={{
-                        fontFamily:
-                          'var(--font-display)'
-                      }}
-                    >
-                      Imágenes del producto
-                    </h2>
+                    <div className='grid gap-4 sm:grid-cols-2'>
+                      <div>
+                        <label className={LABEL_CLS}>
+                          Categoría
+                        </label>
 
-                    <p className='mt-2 text-xs leading-5 text-[#7B756C]'>
-                      Selecciona los archivos directamente
-                      desde tu computador.
-                    </p>
-                  </div>
-
-                  <span className='shrink-0 rounded-full bg-[#F4EFE6] px-3 py-1.5 text-[10px] font-bold text-[#7B756C]'>
-                    {images.length}/{MAX_IMAGES}
-                  </span>
-                </div>
-
-                <input
-                  ref={fileInputRef}
-                  type='file'
-                  accept='image/jpeg,image/png,image/webp,image/avif'
-                  multiple
-                  onChange={handleImageSelect}
-                  className='hidden'
-                />
-
-                <button
-                  type='button'
-                  onClick={openFilePicker}
-                  disabled={
-                    images.length >= MAX_IMAGES ||
-                    loading
-                  }
-                  className='group flex min-h-[180px] w-full flex-col items-center justify-center rounded-[1.5rem] border-2 border-dashed border-[#D8CCBA] bg-[#FBF9F5] px-6 text-center transition hover:border-[#AE8243] hover:bg-[#F7F1E7] disabled:cursor-not-allowed disabled:opacity-50'
-                >
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-[#171512] text-[#F6D79D] transition group-hover:scale-105'>
-                    <ImagePlus className='h-6 w-6' />
-                  </div>
-
-                  <div className='mt-4 text-sm font-bold'>
-                    Seleccionar fotografías
-                  </div>
-
-                  <div className='mt-1 text-xs text-[#8C857B]'>
-                    JPG, PNG, WEBP o AVIF · máximo 15 MB
-                    por imagen
-                  </div>
-                </button>
-
-                {images.length > 0 && (
-                  <div className='mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3'>
-                    {images.map((image, index) => (
-                      <div
-                        key={image.id}
-                        className={`group relative overflow-hidden rounded-2xl border ${
-                          index === activeImage
-                            ? 'border-[#AE8243] ring-2 ring-[#D7A451]/20'
-                            : 'border-[#DED6C9]'
-                        }`}
-                      >
-                        <button
-                          type='button'
-                          onClick={() =>
-                            setActiveImage(index)
+                        <select
+                          value={form.category}
+                          onChange={event =>
+                            updateField(
+                              'category',
+                              event.target.value as Category
+                            )
                           }
-                          className='block aspect-square w-full bg-[#F7F3EC]'
+                          className={`h-12 ${INPUT_CLS}`}
                         >
-                          <img
-                            src={image.preview}
-                            alt={image.file.name}
-                            className='h-full w-full object-cover'
-                          />
-                        </button>
-
-                        <div className='absolute left-2 top-2 rounded-full bg-black/65 px-2 py-1 text-[9px] font-bold text-white backdrop-blur'>
-                          {index === 0
-                            ? 'PORTADA'
-                            : index + 1}
-                        </div>
-
-                        <button
-                          type='button'
-                          onClick={() =>
-                            removeImage(image.id)
-                          }
-                          className='absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/65 text-white backdrop-blur transition hover:bg-[#9A4B3F]'
-                          aria-label='Eliminar imagen'
-                        >
-                          <X className='h-4 w-4' />
-                        </button>
-
-                        <div className='absolute bottom-2 left-2 right-2 flex items-center justify-between opacity-0 transition group-hover:opacity-100'>
-                          <button
-                            type='button'
-                            disabled={index === 0}
-                            onClick={() =>
-                              moveImage(index, 'left')
-                            }
-                            className='flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-white disabled:opacity-30'
-                          >
-                            <ChevronLeft className='h-4 w-4' />
-                          </button>
-
-                          <button
-                            type='button'
-                            disabled={
-                              index ===
-                              images.length - 1
-                            }
-                            onClick={() =>
-                              moveImage(
-                                index,
-                                'right'
-                              )
-                            }
-                            className='flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-white disabled:opacity-30'
-                          >
-                            <ChevronRight className='h-4 w-4' />
-                          </button>
-                        </div>
+                          {CATEGORIES.map(category => (
+                            <option
+                              key={category}
+                              value={category}
+                            >
+                              {category}
+                            </option>
+                          ))}
+                        </select>
                       </div>
-                    ))}
-                  </div>
-                )}
 
-                {loading && images.length > 0 && (
-                  <div className='mt-6'>
-                    <div className='mb-2 flex justify-between text-xs font-bold'>
-                      <span>
-                        Subiendo fotografías a S3
-                      </span>
-
-                      <span>
-                        {uploadProgress}%
-                      </span>
+                      <Field
+                        label='Precio (COP)'
+                        type='number'
+                        min='0'
+                        placeholder='79900'
+                        value={form.price}
+                        onChange={value =>
+                          updateField('price', value)
+                        }
+                      />
                     </div>
 
-                    <div className='h-2 overflow-hidden rounded-full bg-[#EAE3D8]'>
-                      <div
-                        className='h-full rounded-full bg-[#AE8243] transition-all duration-300'
-                        style={{
-                          width: `${uploadProgress}%`
-                        }}
+                    <div className='grid gap-3 sm:grid-cols-2'>
+                      <Toggle
+                        label='Producto destacado'
+                        checked={form.featured}
+                        onChange={value =>
+                          updateField(
+                            'featured',
+                            value
+                          )
+                        }
+                      />
+
+                      <Toggle
+                        label='Producto popular'
+                        checked={form.popular}
+                        onChange={value =>
+                          updateField(
+                            'popular',
+                            value
+                          )
+                        }
                       />
                     </div>
                   </div>
-                )}
-              </section>
+                </section>
 
-              {/* FEEDBACK */}
-              {error && (
-                <div className='rounded-2xl border border-[#E1B9B1] bg-[#FFF5F2] px-4 py-3 text-sm text-[#8E4338]'>
-                  {error}
-                </div>
-              )}
+                {/* IMAGES */}
+                <section className={CARD_CLS}>
+                  <div className='mb-6 flex items-start justify-between gap-4'>
+                    <div>
+                      <div className={EYEBROW_CLS}>
+                        Fotografías
+                      </div>
 
-              {message && (
-                <div className='flex items-center gap-3 rounded-2xl border border-[#BBD4C0] bg-[#F3FAF4] px-4 py-3 text-sm text-[#356C42]'>
-                  <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#DDEFE0]'>
-                    <Check className='h-4 w-4' />
+                      <h2 className={H2_CLS}>
+                        Imágenes del producto
+                      </h2>
+
+                      <p className='mt-2 text-[0.9375rem] leading-[1.45] text-[#6E6E73]'>
+                        Selecciona los archivos directamente
+                        desde tu computador.
+                      </p>
+                    </div>
+
+                    <span className='shrink-0 rounded-full bg-[#F5F5F7] px-3 py-1.5 text-[0.8125rem] font-medium tabular-nums text-[#6E6E73]'>
+                      {images.length}/{MAX_IMAGES}
+                    </span>
                   </div>
 
-                  {message}
-                </div>
-              )}
-            </div>
+                  <input
+                    ref={fileInputRef}
+                    type='file'
+                    accept='image/jpeg,image/png,image/webp,image/avif'
+                    multiple
+                    onChange={handleImageSelect}
+                    className='hidden'
+                  />
 
-            {/* RIGHT: PREVIEW */}
-            <aside className='lg:sticky lg:top-8 lg:h-fit'>
-              <div className='overflow-hidden rounded-[2rem] border border-[#D9D0C0] bg-[#171512] shadow-[0_25px_70px_rgba(23,21,18,0.16)]'>
-                <div className='relative aspect-[4/5] overflow-hidden bg-[#24211D]'>
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt='Vista previa'
-                      className='h-full w-full object-cover'
-                    />
-                  ) : (
-                    <div className='flex h-full flex-col items-center justify-center px-8 text-center'>
-                      <Upload className='h-10 w-10 text-[#D7A451]/60' />
+                  <motion.button
+                    type='button'
+                    onClick={openFilePicker}
+                    disabled={pickerDisabled}
+                    whileTap={pickerDisabled ? undefined : PRESS.whileTap}
+                    transition={PRESS_SPRING}
+                    className={`group flex min-h-[180px] w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-black/15 bg-[#F5F5F7] px-6 text-center transition-colors duration-200 hover:bg-black/[0.06] disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`}
+                  >
+                    <div className='flex h-14 w-14 items-center justify-center rounded-full bg-[#C98A2E]/15 text-[#96600F]'>
+                      <ImagePlus className='h-6 w-6' aria-hidden='true' />
+                    </div>
 
-                      <p
-                        className='mt-4 text-xl font-black text-white'
-                        style={{
-                          fontFamily:
-                            'var(--font-display)'
-                        }}
-                      >
-                        Vista previa
-                      </p>
+                    <div className='mt-4 text-[1.0625rem] font-semibold'>
+                      Seleccionar fotografías
+                    </div>
 
-                      <p className='mt-2 text-xs leading-5 text-white/40'>
-                        Las fotografías seleccionadas
-                        aparecerán aquí.
-                      </p>
+                    <div className='mt-1 text-[0.8125rem] tracking-[0.01em] text-[#6E6E73]'>
+                      JPG, PNG, WEBP o AVIF · máximo 15 MB
+                      por imagen
+                    </div>
+                  </motion.button>
+
+                  {images.length > 0 && (
+                    <div className='mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                      {images.map((image, index) => (
+                        <div
+                          key={image.id}
+                          className={`group relative overflow-hidden rounded-2xl transition-shadow duration-200 ${
+                            index === activeImage
+                              ? 'ring-2 ring-[#96600F] ring-offset-2 ring-offset-white'
+                              : ''
+                          }`}
+                        >
+                          <button
+                            type='button'
+                            onClick={() =>
+                              setActiveImage(index)
+                            }
+                            className={`block aspect-square w-full bg-[#F5F5F7] ${FOCUS}`}
+                          >
+                            <img
+                              src={image.preview}
+                              alt={image.file.name}
+                              className='h-full w-full object-cover'
+                            />
+                          </button>
+
+                          <div
+                            className={`absolute left-2 top-2 rounded-full px-2.5 py-1 text-[0.75rem] font-medium tracking-[0.01em] text-[#1D1D1F] ${GLASS_LIGHT}`}
+                          >
+                            {index === 0
+                              ? 'Portada'
+                              : index + 1}
+                          </div>
+
+                          <button
+                            type='button'
+                            onClick={() =>
+                              removeImage(image.id)
+                            }
+                            className={`absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full text-[#1D1D1F] transition duration-200 hover:bg-[#D70015] hover:text-white active:scale-95 ${GLASS_LIGHT} ${FOCUS}`}
+                            aria-label='Eliminar imagen'
+                          >
+                            <X className='h-4 w-4' aria-hidden='true' />
+                          </button>
+
+                          <div className='absolute bottom-2 left-2 right-2 flex items-center justify-between opacity-0 transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100'>
+                            <button
+                              type='button'
+                              disabled={index === 0}
+                              onClick={() =>
+                                moveImage(index, 'left')
+                              }
+                              aria-label='Mover a la izquierda'
+                              className={`flex h-10 w-10 items-center justify-center rounded-full text-[#1D1D1F] transition duration-200 hover:bg-white active:scale-95 disabled:opacity-30 ${GLASS_LIGHT} ${FOCUS}`}
+                            >
+                              <ChevronLeft className='h-4 w-4' aria-hidden='true' />
+                            </button>
+
+                            <button
+                              type='button'
+                              disabled={
+                                index ===
+                                images.length - 1
+                              }
+                              onClick={() =>
+                                moveImage(
+                                  index,
+                                  'right'
+                                )
+                              }
+                              aria-label='Mover a la derecha'
+                              className={`flex h-10 w-10 items-center justify-center rounded-full text-[#1D1D1F] transition duration-200 hover:bg-white active:scale-95 disabled:opacity-30 ${GLASS_LIGHT} ${FOCUS}`}
+                            >
+                              <ChevronRight className='h-4 w-4' aria-hidden='true' />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
 
-                  <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 pt-20'>
-                    <div className='text-[9px] font-bold uppercase tracking-[0.2em] text-[#F6D79D]'>
+                  {loading && images.length > 0 && (
+                    <div className='mt-6'>
+                      <div className='mb-2 flex justify-between text-[0.8125rem] font-medium tabular-nums'>
+                        <span>
+                          Subiendo fotografías a S3
+                        </span>
+
+                        <span>
+                          {uploadProgress}%
+                        </span>
+                      </div>
+
+                      <div className='h-2 overflow-hidden rounded-full bg-black/[0.08]'>
+                        <motion.div
+                          className='h-full rounded-full bg-[#96600F]'
+                          initial={false}
+                          animate={{
+                            width: `${uploadProgress}%`
+                          }}
+                          transition={{
+                            type: 'spring',
+                            bounce: 0,
+                            duration: 0.4
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </section>
+
+                {/* FEEDBACK */}
+                {error && (
+                  <div
+                    role='alert'
+                    className='rounded-2xl bg-[#FDECEA] px-5 py-4 text-[0.9375rem] leading-snug text-[#B00012]'
+                  >
+                    {error}
+                  </div>
+                )}
+
+                {message && (
+                  <div
+                    role='status'
+                    className='flex items-center gap-3 rounded-2xl bg-[#E8F5EC] px-5 py-4 text-[0.9375rem] leading-snug text-[#1E6B32]'
+                  >
+                    <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#248A3D] text-white'>
+                      <Check className='h-4 w-4' aria-hidden='true' />
+                    </div>
+
+                    {message}
+                  </div>
+                )}
+              </div>
+
+              {/* RIGHT: PREVIEW */}
+              <aside className='lg:sticky lg:top-8 lg:h-fit'>
+                {/* Same card as the catalog: 28px card, 12px inset, 16px well. */}
+                <div className='overflow-hidden rounded-[28px] bg-white p-3 shadow-[0_24px_70px_rgba(0,0,0,0.08)]'>
+                  <div className='relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#F5F5F7]'>
+                    {previewImage ? (
+                      <img
+                        src={previewImage}
+                        alt='Vista previa'
+                        className='h-full w-full object-cover'
+                      />
+                    ) : (
+                      <div className='flex h-full flex-col items-center justify-center px-8 text-center'>
+                        <Upload
+                          className='h-10 w-10 text-[#96600F]/60'
+                          aria-hidden='true'
+                        />
+
+                        <p className='mt-4 text-xl font-semibold tracking-[-0.01em] text-[#1D1D1F]'>
+                          Vista previa
+                        </p>
+
+                        <p className='mt-2 text-[0.9375rem] leading-[1.45] text-[#6E6E73]'>
+                          Las fotografías seleccionadas
+                          aparecerán aquí.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='px-3 pb-2 pt-5'>
+                    <div className='text-[0.8125rem] font-medium tracking-[0.01em] text-[#96600F]'>
                       Vanguard Lighting
                     </div>
 
-                    <h3
-                      className='mt-2 text-3xl font-black tracking-tight text-white'
-                      style={{
-                        fontFamily:
-                          'var(--font-display)'
-                      }}
-                    >
+                    <h3 className='mt-1 text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.02em] text-[#1D1D1F]'>
                       {form.title ||
                         'Nombre del producto'}
                     </h3>
 
-                    <p className='mt-1 text-sm text-white/55'>
+                    <p className='mt-1 text-[0.9375rem] leading-snug text-[#6E6E73]'>
                       {form.subtitle ||
                         'Subtítulo del producto'}
                     </p>
 
-                    <div className='mt-5 text-2xl font-black text-[#F6D79D]'>
+                    <div className='mt-4 text-xl font-semibold tracking-[-0.015em] text-[#1D1D1F]'>
                       {formattedPrice}
                     </div>
+
+                    <div className='mt-6 flex items-center justify-between text-[0.9375rem] text-[#6E6E73]'>
+                      <span>Fotografías</span>
+                      <span className='tabular-nums'>
+                        {images.length}
+                      </span>
+                    </div>
+
+                    <motion.button
+                      type='submit'
+                      disabled={loading}
+                      whileTap={loading ? undefined : PRESS.whileTap}
+                      transition={PRESS_SPRING}
+                      className={`mt-5 w-full gap-3 ${BTN_BASE} ${BTN_PRIMARY}`}
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2
+                            className='h-4 w-4 animate-spin'
+                            aria-hidden='true'
+                          />
+                          Procesando...
+                        </>
+                      ) : (
+                        <>
+                          <Check className='h-4 w-4' aria-hidden='true' />
+                          Crear producto
+                        </>
+                      )}
+                    </motion.button>
                   </div>
                 </div>
-
-                <div className='p-5'>
-                  <div className='flex items-center justify-between text-xs text-white/45'>
-                    <span>Fotografías</span>
-                    <span>
-                      {images.length}
-                    </span>
-                  </div>
-
-                  <button
-                    type='submit'
-                    disabled={loading}
-                    className='mt-5 flex h-14 w-full items-center justify-center gap-3 rounded-full bg-[#D7A451] px-6 text-sm font-black text-[#171512] transition hover:bg-[#F6D79D] disabled:cursor-not-allowed disabled:opacity-60'
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className='h-4 w-4 animate-spin' />
-                        Procesando...
-                      </>
-                    ) : (
-                      <>
-                        <Check className='h-4 w-4' />
-                        Crear producto
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </form>
-      </div>
-    </main>
+              </aside>
+            </div>
+          </form>
+        </div>
+      </main>
+    </MotionConfig>
   )
 }
 
@@ -969,7 +1012,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className='mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-[#7B756C]'>
+      <label className={LABEL_CLS}>
         {label}
       </label>
 
@@ -981,7 +1024,7 @@ function Field({
           onChange(event.target.value)
         }
         placeholder={placeholder}
-        className='h-12 w-full rounded-xl border border-[#D9D0C0] bg-[#FBF9F5] px-4 text-sm outline-none transition focus:border-[#AE8243] focus:ring-2 focus:ring-[#D7A451]/20'
+        className={`h-12 ${INPUT_CLS}`}
       />
     </div>
   )
@@ -997,34 +1040,32 @@ function Toggle({
   onChange: (value: boolean) => void
 }) {
   return (
-    <button
+    <motion.button
       type='button'
+      role='switch'
+      aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`flex h-12 items-center justify-between rounded-xl border px-4 text-left transition ${
-        checked
-          ? 'border-[#AE8243] bg-[#FBF3E4]'
-          : 'border-[#D9D0C0] bg-[#FBF9F5]'
-      }`}
+      {...PRESS}
+      className={`flex min-h-12 items-center justify-between gap-3 rounded-xl bg-[#F5F5F7] px-4 py-2 text-left ${FOCUS}`}
     >
-      <span className='text-xs font-bold'>
+      <span className='text-[0.9375rem] font-medium'>
         {label}
       </span>
 
+      {/* iOS-style switch: 51×31 track, 27px knob that glides on a spring. */}
       <span
-        className={`relative h-5 w-9 rounded-full transition ${
+        className={`flex h-[31px] w-[51px] shrink-0 items-center rounded-full p-[2px] transition-colors duration-200 ${
           checked
-            ? 'bg-[#AE8243]'
-            : 'bg-[#D4CEC3]'
+            ? 'justify-end bg-[#34C759]'
+            : 'justify-start bg-black/[0.16]'
         }`}
       >
-        <span
-          className={`absolute top-1 h-3 w-3 rounded-full bg-white transition ${
-            checked
-              ? 'left-5'
-              : 'left-1'
-          }`}
+        <motion.span
+          layout
+          transition={PRESS_SPRING}
+          className='h-[27px] w-[27px] rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.25)]'
         />
       </span>
-    </button>
+    </motion.button>
   )
 }
