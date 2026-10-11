@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion, type Transition } from 'framer-motion'
 import {
   ArrowRight,
   ChevronLeft,
@@ -229,6 +229,45 @@ const loadWompiWidget = async () => {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Design tokens                                                             */
+/*  ink       #1D1D1F  primary text / primary button                          */
+/*  body      #424245  long-form text                                         */
+/*  muted     #6E6E73  secondary text                                         */
+/*  surface   #F5F5F7  grouped background                                     */
+/*  accent-tx #96600F  brand text (AA on white and on surface)                */
+/* -------------------------------------------------------------------------- */
+
+const FONT_STACK = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif`
+
+/* Springs are critically damped (no bounce): nothing here is thrown or flicked,
+   so nothing overshoots. They retarget from the live value, so every motion can
+   be interrupted without a jump. */
+const PRESS_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.3 }
+
+const SHEET_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.45 }
+
+/* Press feedback begins on pointer-down and is reversible mid-press. */
+const PRESS = {
+  whileTap: { scale: 0.97 },
+  transition: PRESS_SPRING
+} as const
+
+const FOCUS =
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96600F]'
+
+/* Translucent materials fall back to solid when transparency is reduced. */
+const GLASS_LIGHT =
+  'bg-white/70 backdrop-blur-md [@media(prefers-reduced-transparency:reduce)]:bg-white [@media(prefers-reduced-transparency:reduce)]:backdrop-blur-none'
+
+const SCRIM =
+  'bg-black/50 backdrop-blur-xl [@media(prefers-reduced-transparency:reduce)]:bg-black/75 [@media(prefers-reduced-transparency:reduce)]:backdrop-blur-none'
+
+const BTN_BASE = `inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.005em] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`
+
+const BTN_PRIMARY = 'bg-[#1D1D1F] text-white hover:bg-[#3A3A3C]'
+
+const BTN_SECONDARY = 'bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10'
 export default function Catalog() {
   const [products] = useState<Product[]>(() => shuffle(PRODUCTS))
   const [search, setSearch] = useState('')
@@ -282,143 +321,148 @@ export default function Catalog() {
   }, [category, orderedProducts, search])
 
   return (
-    <div className='min-h-screen bg-stone-100 text-stone-900'>
-      {/* ... Headers de la vista ... */}
-      <section className='relative overflow-hidden border-b border-stone-300 bg-stone-900'>
-        <div
-          aria-hidden='true'
-          className='pointer-events-none absolute inset-0'
-          style={{
-            background:
-              'radial-gradient(circle at 78% 35%, rgba(245, 158, 11, 0.15), transparent 32%), radial-gradient(circle at 10% 85%, rgba(255, 255, 255, 0.05), transparent 25%)'
-          }}
-        />
+    // Reduced motion: transforms are dropped, opacity fades are kept.
+    <MotionConfig reducedMotion='user'>
+      <div
+        className='min-h-screen bg-[#F5F5F7] text-[#1D1D1F] antialiased [font-optical-sizing:auto]'
+        style={{ fontFamily: FONT_STACK }}
+      >
+        {/* ... Headers de la vista ... */}
+        <section className='relative overflow-hidden bg-white'>
+          <div
+            aria-hidden='true'
+            className='pointer-events-none absolute inset-0'
+            style={{
+              background:
+                'radial-gradient(circle at 78% 35%, rgba(255, 190, 83, 0.16), transparent 34%)'
+            }}
+          />
 
-        <div className='relative mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28'>
-          <div className='max-w-4xl'>
-            <div className='mb-6 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300'>
-              Colección de iluminación
+          <div className='relative mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28'>
+            <div className='max-w-4xl'>
+              <div className='mb-6 inline-flex items-center rounded-full bg-[#F5F5F7] px-4 py-2 text-[0.8125rem] font-medium tracking-[0.01em] text-[#96600F]'>
+                Colección de iluminación
+              </div>
+
+              <h1 className='max-w-4xl text-[clamp(2.75rem,7vw,5.5rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-[#1D1D1F]'>
+                Lámparas que hacen
+                <span className='block text-[#96600F]'>
+                  que el espacio hable.
+                </span>
+              </h1>
+
+              <p className='mt-6 max-w-2xl text-[1.0625rem] leading-[1.47] text-[#6E6E73] sm:text-[1.3125rem] sm:leading-[1.38]'>
+                Descubre nuestra colección de lámparas comerciales de alta
+                calidad, fabricadas bajo pedido para convertir la
+                iluminación en parte del diseño.
+              </p>
             </div>
 
-            <h1
-              className='max-w-4xl text-5xl font-black tracking-tight text-stone-50 sm:text-6xl md:text-7xl lg:text-[6rem]'
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Lámparas que hacen
-              <span className='block text-amber-500'>
-                que el espacio hable.
-              </span>
-            </h1>
+            <div className='mt-12 flex flex-col gap-4 lg:flex-row lg:items-center'>
+              <div className='relative w-full max-w-2xl'>
+                <Search
+                  aria-hidden='true'
+                  className='pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6E6E73]'
+                />
 
-            <p className='mt-7 max-w-2xl text-lg leading-8 text-stone-300'>
-              Descubre nuestra colección de lámparas comerciales de alta
-              calidad, fabricadas bajo pedido para convertir la
-              iluminación en parte del diseño.
-            </p>
+                <input
+                  type='search'
+                  value={search}
+                  onChange={event => setSearch(event.target.value)}
+                  placeholder='Buscar una lámpara...'
+                  className='h-12 w-full rounded-xl bg-black/[0.06] pl-12 pr-5 text-base tracking-[-0.005em] text-[#1D1D1F] outline-none transition-colors duration-200 placeholder:text-[#6E6E73] focus:bg-white focus:ring-2 focus:ring-[#96600F]'
+                />
+              </div>
+            </div>
+
+            <div className='-mx-1 mt-6 flex gap-2 overflow-x-auto px-1 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+              {categories.map(item => (
+                <motion.button
+                  key={item}
+                  type='button'
+                  onClick={() => setCategory(item)}
+                  {...PRESS}
+                  className={`min-h-11 shrink-0 rounded-full px-5 text-[0.9375rem] font-medium tracking-[-0.005em] transition-colors duration-200 ${FOCUS} ${
+                    item === category
+                      ? 'bg-[#1D1D1F] text-white'
+                      : 'bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10'
+                  }`}
+                >
+                  {item}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <main className='mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20'>
+          <div className='mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'>
+            <div>
+              <div className='text-[1.0625rem] font-semibold leading-snug text-[#96600F]'>
+                Nuestra selección
+              </div>
+
+              <h2 className='mt-2 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.025em] text-[#1D1D1F]'>
+                Encuentra tu lámpara
+              </h2>
+            </div>
+
+            <div className='text-[0.9375rem] text-[#6E6E73]'>
+              {filteredProducts.length}{' '}
+              {filteredProducts.length === 1 ? 'modelo' : 'modelos'}
+            </div>
           </div>
 
-          <div className='mt-12 flex flex-col gap-4 lg:flex-row lg:items-center'>
-            <div className='relative w-full max-w-2xl'>
-              <Search className='absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-400' />
-
-              <input
-                type='search'
-                value={search}
-                onChange={event => setSearch(event.target.value)}
-                placeholder='Buscar una lámpara...'
-                className='h-14 w-full rounded-2xl border border-white/10 bg-white/5 pl-14 pr-5 text-base text-white outline-none transition placeholder:text-stone-500 focus:border-amber-500/70 focus:bg-white/10'
+          {filteredProducts.length === 0 ? (
+            <div className='rounded-[28px] bg-white p-14 text-center'>
+              <Search
+                aria-hidden='true'
+                className='mx-auto h-8 w-8 text-[#96600F]'
               />
-            </div>
-          </div>
 
-          <div className='mt-6 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-            {categories.map(item => (
-              <button
-                key={item}
+              <h3 className='mt-5 text-2xl font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'>
+                No encontramos esa lámpara
+              </h3>
+
+              <p className='mx-auto mt-3 max-w-md text-[1.0625rem] leading-[1.47] text-[#6E6E73]'>
+                Prueba con otro nombre o elimina el filtro para explorar
+                toda la colección.
+              </p>
+
+              <motion.button
                 type='button'
-                onClick={() => setCategory(item)}
-                className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                  item === category
-                    ? 'border-amber-500 bg-amber-500 text-stone-900'
-                    : 'border-white/10 bg-white/5 text-stone-300 hover:bg-white/10'
-                }`}
+                onClick={() => {
+                  setSearch('')
+                  setCategory('Todas')
+                }}
+                {...PRESS}
+                className={`mt-6 min-h-12 px-6 text-[1.0625rem] ${BTN_BASE} ${BTN_PRIMARY}`}
               >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <main className='mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20'>
-        <div className='mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between'>
-          <div>
-            <div className='text-[10px] font-bold uppercase tracking-[0.2em] text-amber-600'>
-              Nuestra selección
+                Ver toda la colección
+              </motion.button>
             </div>
-
-            <h2
-              className='mt-2 text-4xl font-black tracking-tight text-stone-900 sm:text-5xl'
-              style={{ fontFamily: 'var(--font-display)' }}
+          ) : (
+            <motion.div
+              layout
+              className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'
             >
-              Encuentra tu lámpara
-            </h2>
-          </div>
+              {filteredProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => setSelectedProduct(product)}
+                />
+              ))}
+            </motion.div>
+          )}
+        </main>
 
-          <div className='text-sm text-stone-500'>
-            {filteredProducts.length}{' '}
-            {filteredProducts.length === 1 ? 'modelo' : 'modelos'}
-          </div>
-        </div>
-
-        {filteredProducts.length === 0 ? (
-          <div className='rounded-[2rem] border border-stone-300 bg-white p-14 text-center'>
-            <Search className='mx-auto h-8 w-8 text-amber-600' />
-
-            <h3
-              className='mt-5 text-2xl font-black text-stone-900'
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              No encontramos esa lámpara
-            </h3>
-
-            <p className='mx-auto mt-3 max-w-md text-stone-600'>
-              Prueba con otro nombre o elimina el filtro para explorar
-              toda la colección.
-            </p>
-
-            <button
-              type='button'
-              onClick={() => {
-                setSearch('')
-                setCategory('Todas')
-              }}
-              className='mt-6 rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-500 hover:text-stone-900'
-            >
-              Ver toda la colección
-            </button>
-          </div>
-        ) : (
-          <motion.div
-            layout
-            className='grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3'
-          >
-            {filteredProducts.map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => setSelectedProduct(product)}
-              />
-            ))}
-          </motion.div>
-        )}
-      </main>
-
-      <ProductModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
-    </div>
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      </div>
+    </MotionConfig>
   )
 }
 
@@ -434,44 +478,42 @@ function ProductCard({
       type='button'
       layout
       onClick={onClick}
-      whileHover={{ y: -6 }}
-      whileTap={{ scale: 0.99 }}
-      className='group overflow-hidden rounded-[1.6rem] border border-stone-300 bg-white text-left transition-shadow duration-300 hover:shadow-xl hover:shadow-stone-900/10'
+      {...PRESS}
+      className={`group overflow-hidden rounded-[28px] bg-white p-3 text-left ${FOCUS}`}
     >
-      <div className='relative aspect-[4/4.4] overflow-hidden bg-stone-200'>
+      {/* Concentric radii: 28px card, 12px inset, 16px image well. */}
+      <div className='relative aspect-[4/4.4] overflow-hidden rounded-2xl bg-[#F5F5F7]'>
         <img
           src={resolveImageUrl(product.images[0])}
           alt={product.title}
-          className='h-full w-full object-contain transition duration-700 group-hover:scale-[1.045]'
+          className='h-full w-full object-contain'
           loading='lazy'
         />
 
-        <div className='absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent' />
-
-        <div className='absolute left-4 top-4 rounded-full bg-black/45 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md'>
+        <div
+          className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-[0.8125rem] font-medium tracking-[0.01em] text-[#1D1D1F] ${GLASS_LIGHT}`}
+        >
           {product.category}
-        </div>
-
-        <div className='absolute bottom-4 left-5 right-5 flex items-end justify-between gap-3 text-white'>
-          <div>
-            <div className='font-black tracking-tight text-2xl'>
-              {product.title}
-            </div>
-            <div className='mt-1 text-white/80 text-xs'>
-              {product.subtitle}
-            </div>
-          </div>
-
-          <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-stone-900 transition group-hover:bg-amber-500'>
-            <ArrowRight className='h-4 w-4' />
-          </div>
         </div>
       </div>
 
-      <div className='flex items-center justify-between gap-4 px-5 py-4'>
-        <span className='shrink-0 font-bold text-stone-900 text-sm'>
-          {formatPrice(product.price)}
-        </span>
+      <div className='flex items-end justify-between gap-3 px-3 pb-3 pt-5'>
+        <div>
+          <div className='text-[1.375rem] font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'>
+            {product.title}
+          </div>
+          <div className='mt-1 text-[0.9375rem] leading-snug text-[#6E6E73]'>
+            {product.subtitle}
+          </div>
+
+          <span className='mt-4 block text-[0.9375rem] font-semibold text-[#1D1D1F]'>
+            {formatPrice(product.price)}
+          </span>
+        </div>
+
+        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 group-hover:bg-[#1D1D1F] group-hover:text-white'>
+          <ArrowRight className='h-4 w-4' aria-hidden='true' />
+        </div>
       </div>
     </motion.button>
   )
@@ -542,6 +584,8 @@ function ProductModal({
     setCurrentImage(index => (index - 1 + images.length) % images.length)
   }
 
+  const buyDisabled = !product.price || product.price <= 0 || checkoutOpen
+
   return (
     <AnimatePresence>
       <div className='fixed inset-0 z-[100] overflow-y-auto px-4 sm:px-6'>
@@ -551,30 +595,37 @@ function ProductModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
           onClick={onClose}
-          className='fixed inset-0 h-full w-full cursor-default bg-black/65 backdrop-blur-md'
+          className={`fixed inset-0 h-full w-full cursor-default ${SCRIM}`}
         />
 
+        {/* Enters and exits along the same path (up from / back down to y: 24). */}
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.97 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className='relative mx-auto my-12 w-full max-w-6xl overflow-hidden rounded-[2rem] bg-stone-50 shadow-2xl'
+          transition={{
+            y: SHEET_SPRING,
+            scale: SHEET_SPRING,
+            opacity: { duration: 0.25, ease: 'easeOut' }
+          }}
+          className='relative mx-auto my-12 w-full max-w-6xl overflow-hidden rounded-[28px] bg-white shadow-[0_30px_80px_rgba(0,0,0,0.28)]'
         >
-          <button
+          <motion.button
             type='button'
             onClick={onClose}
             aria-label='Cerrar'
-            className='absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition hover:bg-black/60'
+            {...PRESS}
+            className={`absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full text-[#1D1D1F] transition-colors duration-200 hover:bg-white ${GLASS_LIGHT} ${FOCUS}`}
           >
-            <X className='h-5 w-5' />
-          </button>
+            <X className='h-5 w-5' aria-hidden='true' />
+          </motion.button>
 
           <div className='grid lg:grid-cols-[1.05fr_0.95fr]'>
             {/* ... Galería de imágenes ... */}
-            <div className='border-b border-stone-300 bg-stone-200 p-5 sm:p-8 lg:border-b-0 lg:border-r'>
-              <div className='group relative aspect-square overflow-hidden rounded-[1.5rem] bg-stone-300'>
+            <div className='bg-[#F5F5F7] p-5 sm:p-8'>
+              <div className='group relative aspect-square overflow-hidden rounded-3xl bg-white'>
                 <AnimatePresence mode='wait'>
                   <motion.img
                     key={images[currentImage]}
@@ -583,7 +634,7 @@ function ProductModal({
                     initial={{ opacity: 0, scale: 1.025 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.985 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
                     className='h-full w-full object-contain'
                   />
                 </AnimatePresence>
@@ -594,34 +645,35 @@ function ProductModal({
                       type='button'
                       onClick={previousImage}
                       aria-label='Imagen anterior'
-                      className='absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-black/60 group-hover:opacity-100 focus-visible:opacity-100'
+                      className={`absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#1D1D1F] opacity-0 transition duration-200 hover:bg-white active:scale-95 group-hover:opacity-100 focus-visible:opacity-100 ${GLASS_LIGHT} ${FOCUS}`}
                     >
-                      <ChevronLeft className='h-5 w-5' />
+                      <ChevronLeft className='h-5 w-5' aria-hidden='true' />
                     </button>
 
                     <button
                       type='button'
                       onClick={nextImage}
                       aria-label='Siguiente imagen'
-                      className='absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:bg-black/60 group-hover:opacity-100 focus-visible:opacity-100'
+                      className={`absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#1D1D1F] opacity-0 transition duration-200 hover:bg-white active:scale-95 group-hover:opacity-100 focus-visible:opacity-100 ${GLASS_LIGHT} ${FOCUS}`}
                     >
-                      <ChevronRight className='h-5 w-5' />
+                      <ChevronRight className='h-5 w-5' aria-hidden='true' />
                     </button>
                   </>
                 )}
               </div>
 
               {images.length > 1 && (
-                <div className='mt-4 flex flex-wrap gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                <div className='mt-4 flex flex-wrap gap-2 overflow-x-auto p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
                   {images.map((image, index) => (
-                    <button
+                    <motion.button
                       key={image}
                       type='button'
                       onClick={() => setCurrentImage(index)}
-                      className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${
+                      {...PRESS}
+                      className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white transition-opacity duration-200 ${FOCUS} ${
                         currentImage === index
-                          ? 'border-amber-600'
-                          : 'border-transparent opacity-60 hover:opacity-100'
+                          ? 'ring-2 ring-[#96600F] ring-offset-2 ring-offset-[#F5F5F7]'
+                          : 'opacity-60 hover:opacity-100'
                       }`}
                     >
                       <img
@@ -629,29 +681,26 @@ function ProductModal({
                         alt={`${product.title} miniatura ${index + 1}`}
                         className='h-full w-full object-contain'
                       />
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               )}
             </div>
 
             <div className='flex flex-col p-6 sm:p-9 lg:p-12'>
-              <div className='text-[10px] font-bold uppercase tracking-wider text-amber-600'>
+              <div className='text-[1.0625rem] font-semibold leading-snug text-[#96600F]'>
                 {product.category}
               </div>
 
-              <h2
-                className='mt-3 text-4xl font-black tracking-tight text-stone-900 sm:text-5xl'
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
+              <h2 className='mt-3 text-[clamp(2.25rem,4vw,3.25rem)] font-semibold leading-[1.06] tracking-[-0.028em] text-[#1D1D1F]'>
                 {product.title}
               </h2>
 
-              <p className='mt-3 text-base font-medium text-stone-600'>
+              <p className='mt-3 text-xl leading-[1.3] tracking-[-0.01em] text-[#6E6E73]'>
                 {product.subtitle}
               </p>
 
-              <p className='mt-7 max-w-xl text-base leading-7 text-stone-700'>
+              <p className='mt-7 max-w-xl text-[1.0625rem] leading-[1.5] text-[#424245]'>
                 {product.description}
               </p>
 
@@ -664,7 +713,7 @@ function ProductModal({
                 ].map(item => (
                   <div
                     key={item}
-                    className='rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-stone-800'
+                    className='rounded-2xl bg-[#F5F5F7] px-4 py-3.5 text-[0.9375rem] font-medium leading-snug text-[#1D1D1F]'
                   >
                     {item}
                   </div>
@@ -672,37 +721,36 @@ function ProductModal({
               </div>
 
               <div className='mt-auto pt-10'>
-                <div className='flex items-end justify-between gap-4 border-t border-stone-300 pt-6'>
+                <div className='flex items-end justify-between gap-4'>
                   <div>
-                    <div className='text-[10px] font-bold uppercase tracking-wider text-stone-500'>
+                    <div className='text-[0.8125rem] font-medium tracking-[0.01em] text-[#6E6E73]'>
                       Precio
                     </div>
-                    <div
-                      className='mt-1 text-4xl font-black tracking-tight text-stone-900'
-                      style={{ fontFamily: 'var(--font-display)' }}
-                    >
+                    <div className='mt-1 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.025em] text-[#1D1D1F]'>
                       {formatPrice(product.price)} COP
                     </div>
                   </div>
 
-                  <button
+                  <motion.button
                     type='button'
                     onClick={() => setCheckoutOpen(true)}
-                    disabled={!product.price || product.price <= 0 || checkoutOpen}
-                    className='inline-flex h-14 items-center gap-2.5 rounded-full bg-stone-900 px-6 text-sm font-bold text-white transition hover:bg-amber-500 hover:text-stone-900 disabled:cursor-not-allowed disabled:bg-stone-400'
+                    disabled={buyDisabled}
+                    whileTap={buyDisabled ? undefined : PRESS.whileTap}
+                    transition={PRESS_SPRING}
+                    className={`min-h-12 px-6 text-[1.0625rem] ${BTN_BASE} ${BTN_PRIMARY}`}
                   >
-                    <ShoppingBag className='h-4 w-4' />
+                    <ShoppingBag className='h-4 w-4' aria-hidden='true' />
                     Pedir y pagar
-                  </button>
+                  </motion.button>
                 </div>
 
-                <div className='mt-4 flex items-center gap-2 text-xs text-stone-500'>
-                  <span className='h-2 w-2 rounded-full bg-emerald-600' />
+                <div className='mt-4 flex items-center gap-2 text-[0.8125rem] tracking-[0.01em] text-[#6E6E73]'>
+                  <span className='h-2 w-2 rounded-full bg-[#248A3D]' />
                   Pago seguro mediante Wompi
                 </div>
 
                 {!product.price && (
-                  <p className='mt-2 text-xs text-red-600'>
+                  <p className='mt-2 text-[0.8125rem] text-[#D70015]'>
                     Agrega el precio real de este modelo en PRODUCTS para
                     habilitar el checkout.
                   </p>
@@ -715,6 +763,10 @@ function ProductModal({
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
+                      transition={{
+                        height: SHEET_SPRING,
+                        opacity: { duration: 0.25, ease: 'easeOut' }
+                      }}
                       className='overflow-auto'
                     >
                       <WompiCheckout
@@ -882,21 +934,18 @@ function WompiCheckout({
   return (
     <form
       onSubmit={submit}
-      className='mt-6 rounded-[1.5rem] border border-stone-300 bg-white p-5 sm:p-6'
+      className='mt-6 rounded-3xl bg-[#F5F5F7] p-5 sm:p-6'
     >
       <div className='mb-5'>
-        <div className='text-[10px] font-bold uppercase tracking-wider text-amber-600'>
+        <div className='text-[0.9375rem] font-semibold leading-snug text-[#96600F]'>
           Datos de pedido
         </div>
 
-        <h3
-          className='mt-2 text-2xl font-black text-stone-900'
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
+        <h3 className='mt-1 text-2xl font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'>
           Preparar compra segura
         </h3>
 
-        <p className='mt-2 text-sm leading-6 text-stone-600'>
+        <p className='mt-2 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
           Tus datos se utilizan para preparar el pedido y enviarlos al
           proceso de pago seguro de Wompi.
         </p>
@@ -955,48 +1004,57 @@ function WompiCheckout({
         />
       </div>
 
-      <div className='mt-4 rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3'>
+      <div className='mt-4 rounded-2xl bg-white px-4 py-3.5'>
         <div className='flex items-center justify-between gap-4'>
           <div>
-            <div className='text-xs font-semibold text-stone-500'>Producto</div>
-            <div className='mt-1 text-sm font-bold text-stone-900'>
+            <div className='text-[0.8125rem] font-medium tracking-[0.01em] text-[#6E6E73]'>
+              Producto
+            </div>
+            <div className='mt-1 text-[0.9375rem] font-semibold text-[#1D1D1F]'>
               {product.title}
             </div>
           </div>
-          <div className='text-sm font-black text-stone-900'>
+          <div className='text-[0.9375rem] font-semibold text-[#1D1D1F]'>
             {formatPrice(product.price)} COP
           </div>
         </div>
       </div>
 
       {error && (
-        <div className='mt-4 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800'>
+        <div
+          role='alert'
+          className='mt-4 rounded-xl bg-[#D70015]/10 px-4 py-3 text-[0.9375rem] leading-snug text-[#B00012]'
+        >
           {error}
         </div>
       )}
 
       <div className='mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'>
-        <button
+        <motion.button
           type='button'
           onClick={onCancel}
           disabled={loading}
-          className='h-12 rounded-full border border-stone-300 px-5 text-sm font-semibold text-stone-700 transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-60'
+          whileTap={loading ? undefined : PRESS.whileTap}
+          transition={PRESS_SPRING}
+          className={`min-h-12 px-5 text-[1.0625rem] ${BTN_BASE} bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10`}
         >
           Cancelar
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
           type='submit'
           disabled={loading}
-          className='inline-flex h-12 items-center justify-center gap-2 rounded-full bg-stone-900 px-6 text-sm font-bold text-white transition hover:bg-amber-500 hover:text-stone-900 disabled:cursor-wait disabled:opacity-60'
+          whileTap={loading ? undefined : PRESS.whileTap}
+          transition={PRESS_SPRING}
+          className={`min-h-12 px-6 text-[1.0625rem] disabled:cursor-wait ${BTN_BASE} ${BTN_PRIMARY}`}
         >
-          <ShoppingBag className='h-4 w-4' />
+          <ShoppingBag className='h-4 w-4' aria-hidden='true' />
           {loading ? 'Preparando pago...' : 'Continuar con Wompi'}
-        </button>
+        </motion.button>
       </div>
 
-      <div className='mt-4 flex items-center gap-2 text-xs text-stone-500'>
-        <span className='h-2 w-2 rounded-full bg-emerald-600' />
+      <div className='mt-4 flex items-center gap-2 text-[0.8125rem] tracking-[0.01em] text-[#6E6E73]'>
+        <span className='h-2 w-2 rounded-full bg-[#248A3D]' />
         Pago procesado de forma segura mediante Wompi
       </div>
     </form>
@@ -1022,7 +1080,7 @@ function CheckoutInput({
 }) {
   return (
     <label className='block'>
-      <span className='mb-1.5 block text-xs font-semibold text-stone-600'>
+      <span className='mb-1.5 block text-[0.8125rem] font-medium tracking-[0.01em] text-[#6E6E73]'>
         {label}
       </span>
       <input
@@ -1033,7 +1091,7 @@ function CheckoutInput({
         onChange={event => onChange(event.target.value)}
         required={required}
         autoComplete={autoComplete}
-        className='h-12 w-full rounded-xl border border-stone-300 bg-stone-50 px-4 text-sm text-stone-900 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/10'
+        className='h-12 w-full rounded-xl bg-white px-4 text-base tracking-[-0.005em] text-[#1D1D1F] outline-none transition-shadow duration-200 focus:ring-2 focus:ring-[#96600F]'
       />
     </label>
   )

@@ -2,7 +2,13 @@ import { useRef, type ReactNode } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import { motion, useInView } from 'framer-motion'
+import {
+  motion,
+  MotionConfig,
+  useInView,
+  type Transition,
+  type Variants,
+} from 'framer-motion'
 
 import {
   ArrowRight,
@@ -23,12 +29,58 @@ import WhatsAppFAB from '@/components/WhatsAppFAB'
 
 import { PHONE_NUMBER } from '@/utils/config'
 
-import { cardVariant, fadeUp, stagger } from '../catalog/ui/variants'
-
 const WA_MESSAGE =
   'Hola! Estoy interesado en una de sus lámparas. ¿Podrían darme más información?'
 
 const WA_HREF = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`
+
+/* -------------------------------------------------------------------------- */
+/*  Motion                                                                    */
+/*  Springs, critically damped (no bounce): nothing here carries momentum,    */
+/*  so nothing overshoots. Springs retarget from the live value, so any       */
+/*  animation can be interrupted without a jump.                              */
+/* -------------------------------------------------------------------------- */
+
+/** Press feedback: starts on pointer-down, instant and reversible. */
+const PRESS_SPRING: Transition = { type: 'spring', bounce: 0, duration: 0.3 }
+
+/** Entrance: y settles on a spring, opacity follows a short ease. */
+const rise: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      y: { type: 'spring', bounce: 0, duration: 0.6, delay },
+      opacity: { duration: 0.4, ease: 'easeOut', delay },
+    },
+  }),
+}
+
+const stagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Design tokens                                                             */
+/*  ink       #1D1D1F  primary text / primary button                          */
+/*  muted     #6E6E73  secondary text                                         */
+/*  surface   #F5F5F7  grouped background                                     */
+/*  accent    #C98A2E  brand fill (glow, icon tint)                           */
+/*  accent-tx #96600F  brand text (passes AA on white and on surface)         */
+/* -------------------------------------------------------------------------- */
+
+const FOCUS =
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#96600F]'
+
+const BTN_BASE = `inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.005em] transition-colors duration-200 ${FOCUS}`
+
+const BTN_PRIMARY = 'bg-[#1D1D1F] text-white hover:bg-[#3A3A3C]'
+
+const BTN_SECONDARY = 'bg-black/[0.06] text-[#1D1D1F] hover:bg-black/10'
 
 function Reveal({
   children,
@@ -50,7 +102,7 @@ function Reveal({
     <motion.div
       ref={ref}
       custom={delay}
-      variants={fadeUp}
+      variants={rise}
       initial='hidden'
       animate={inView ? 'visible' : 'hidden'}
       className={className}
@@ -82,19 +134,16 @@ const STATS = [
 const FEATURES = [
   {
     icon: Sparkles,
-    eyebrow: '01',
     title: 'Diseño que transforma',
     body: 'Lámparas con una estética cuidada para convertirse en parte protagonista de tu espacio.',
   },
   {
     icon: ShieldCheck,
-    eyebrow: '02',
     title: 'Calidad controlada',
     body: 'Cada unidad pasa por una revisión antes de ser empacada para mantener un acabado consistente.',
   },
   {
     icon: PackageCheck,
-    eyebrow: '03',
     title: 'Fabricación bajo pedido',
     body: 'Producimos cada lámpara para tu compra y la preparamos con cuidado antes del despacho.',
   },
@@ -123,27 +172,81 @@ const PROCESS = [
   },
 ]
 
+const TRUST = [
+  {
+    icon: ShieldCheck,
+    title: 'Calidad verificada',
+    body: 'Revisión antes del despacho.',
+  },
+  {
+    icon: Truck,
+    title: 'Envíos nacionales',
+    body: 'Despachamos a toda Colombia.',
+  },
+  {
+    icon: Clock3,
+    title: 'Producción bajo pedido',
+    body: 'Cada compra se fabrica para ti.',
+  },
+]
+
+const SERVICES = [
+  {
+    icon: ShieldCheck,
+    title: 'Control de calidad',
+    body: 'Revisamos cada unidad antes del despacho.',
+  },
+  {
+    icon: PackageCheck,
+    title: 'Empaque cuidado',
+    body: 'Preparamos tu lámpara para un traslado seguro.',
+  },
+  {
+    icon: Truck,
+    title: 'Envíos nacionales',
+    body: 'Despachos disponibles dentro de Colombia.',
+  },
+]
+
+/** Sentence case, no tracking: the eyebrow is a quiet signpost, not a banner. */
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className='mb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-[#C98A2E]'>
+    <p className='mb-3 text-[1.0625rem] font-semibold leading-snug text-[#96600F]'>
       {children}
     </p>
   )
 }
 
+/** Large display type: tight leading, negative tracking. */
 function SectionHeading({ children }: { children: ReactNode }) {
   return (
-    <h2
-      className='text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl'
-      style={{ fontFamily: 'var(--font-display)' }}
-    >
+    <h2 className='text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.025em] text-[#1D1D1F]'>
       {children}
     </h2>
   )
 }
 
 function Accent({ children }: { children: ReactNode }) {
-  return <span className='text-[#C98A2E]'>{children}</span>
+  return <span className='text-[#96600F]'>{children}</span>
+}
+
+/** Tinted icon tile: color sits on a soft solid layer, not on the page. */
+function IconTile({
+  icon: Icon,
+  size = 'md',
+}: {
+  icon: typeof Sparkles
+  size?: 'md' | 'lg'
+}) {
+  const box = size === 'lg' ? 'h-12 w-12 rounded-[14px]' : 'h-11 w-11 rounded-xl'
+
+  return (
+    <div
+      className={`flex shrink-0 items-center justify-center bg-[#C98A2E]/15 text-[#96600F] ${box}`}
+    >
+      <Icon className='h-5 w-5' aria-hidden='true' />
+    </div>
+  )
 }
 
 function WAIcon({ className }: { className?: string }) {
@@ -166,16 +269,11 @@ function WAButton({
   size?: 'sm' | 'md' | 'lg'
   label?: string
 }) {
-  const paddings = {
-    sm: 'px-4 py-2.5',
-    md: 'px-5 py-3',
-    lg: 'px-6 py-3.5',
-  }
-
-  const texts = {
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base',
+  // Every size keeps a 44pt minimum hit target.
+  const sizes = {
+    sm: 'min-h-11 px-4 text-sm',
+    md: 'min-h-11 px-5 text-[0.9375rem]',
+    lg: 'min-h-12 px-6 text-[1.0625rem]',
   }
 
   return (
@@ -183,11 +281,11 @@ function WAButton({
       href={WA_HREF}
       target='_blank'
       rel='noopener noreferrer'
-      className={`inline-flex items-center gap-2.5 rounded-full border border-[#D7A451] bg-transparent font-semibold text-[#17191D] transition-colors duration-200 hover:bg-[#C98A2E] hover:text-white ${paddings[size]} ${texts[size]}`}
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      className={`${BTN_BASE} ${BTN_SECONDARY} ${sizes[size]}`}
+      whileTap={{ scale: 0.97 }}
+      transition={PRESS_SPRING}
     >
-      <WAIcon className='h-4 w-4 shrink-0' />
+      <WAIcon className='h-[1.125rem] w-[1.125rem] shrink-0' />
       {label}
     </motion.a>
   )
@@ -195,396 +293,319 @@ function WAButton({
 
 export default function Landing() {
   return (
-    <div className='relative min-h-screen overflow-x-hidden bg-white text-[#17191D]'>
-      {/* HERO */}
-      <section className='relative overflow-hidden bg-white px-6 py-16 text-[#17191D] sm:py-20 lg:min-h-[92vh] lg:py-10'>
-        <div
-          aria-hidden='true'
-          className='pointer-events-none absolute inset-0'
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(23,25,29,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(23,25,29,0.035) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
-        />
+    // Reduced motion: transforms are dropped, opacity fades are kept.
+    <MotionConfig reducedMotion='user'>
+      <div
+        className='relative min-h-screen overflow-x-hidden bg-white text-[#1D1D1F] antialiased [font-optical-sizing:auto]'
+        style={{
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif",
+        }}
+      >
+        {/* HERO */}
+        <section className='relative overflow-hidden bg-white px-6 py-16 sm:py-20 lg:min-h-[92vh] lg:py-10'>
+          {/* One soft glow behind the lamp: the only decoration. */}
+          <div
+            aria-hidden='true'
+            className='pointer-events-none absolute inset-0'
+            style={{
+              background:
+                'radial-gradient(circle at 78% 48%, rgba(255,190,83,0.16) 0%, rgba(255,255,255,0) 36%)',
+            }}
+          />
 
-        <div
-          aria-hidden='true'
-          className='pointer-events-none absolute inset-0'
-          style={{
-            background:
-              'radial-gradient(circle at 78% 48%, rgba(255,190,83,0.16) 0%, rgba(255,255,255,0) 34%), linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0))',
-          }}
-        />
-
-        <div className='relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl items-center gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-4'>
-          <motion.div
-            className='order-1 flex w-full flex-col items-center'
-            variants={stagger}
-            initial='hidden'
-            animate='visible'
-          >
+          <div className='relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl items-center gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-4'>
             <motion.div
-              variants={cardVariant}
-              className='mb-6 inline-flex items-center gap-2 rounded-full border border-[#DDD7CD] bg-[#FBF9F5] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#C98A2E]'
-            >
-              <Lightbulb className='h-3.5 w-3.5' />
-              Colección de iluminación
-            </motion.div>
-
-            <motion.h1
-              variants={cardVariant}
-              className='max-w-2xl text-5xl font-black tracking-[-0.045em] sm:text-6xl md:text-7xl lg:text-[5.4rem]'
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Luz que convierte
-              <span className='block text-[#C98A2E]'>
-                espacios en experiencias.
-              </span>
-            </motion.h1>
-
-            <motion.p
-              variants={cardVariant}
-              className='mt-7 max-w-xl text-base leading-relaxed text-[#66635D] sm:text-lg'
-            >
-              Lámparas comerciales de alta calidad, fabricadas bajo pedido y
-              pensadas para destacar en hogares, negocios y espacios
-              profesionales.
-            </motion.p>
-
-            <motion.div
-              variants={cardVariant}
-              className='mt-9 flex flex-col items-start gap-3 sm:flex-row'
+              className='order-1 flex w-full flex-col items-center text-center lg:items-start lg:text-left'
+              variants={stagger}
+              initial='hidden'
+              animate='visible'
             >
               <motion.div
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
+                variants={rise}
+                className='mb-6 inline-flex items-center gap-2 rounded-full bg-[#F5F5F7] px-4 py-2 text-[0.8125rem] font-medium tracking-[0.01em] text-[#96600F]'
               >
-                <Link
-                  to='/catalog'
-                  className='group inline-flex items-center gap-2.5 rounded-full bg-[#17191D] px-6 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#C98A2E]'
-                >
-                  Ver colección
-                  <ArrowRight className='h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5' />
-                </Link>
+                <Lightbulb className='h-3.5 w-3.5' aria-hidden='true' />
+                Colección de iluminación
               </motion.div>
 
-              <WAButton label='Habla con nosotros' />
-            </motion.div>
-
-            <motion.div
-              variants={cardVariant}
-              className='mt-10 grid w-full max-w-xl grid-cols-2 overflow-hidden rounded-2xl border border-[#DDD7CD] bg-[#FBF9F5] sm:grid-cols-4'
-            >
-              {STATS.map((s, i) => (
-                <div
-                  key={s.label}
-                  className={`px-4 py-5 ${
-                    i > 0
-                      ? 'border-[#DDD7CD] sm:border-l'
-                      : ''
-                  } ${
-                    i > 1
-                      ? 'border-t sm:border-t-0'
-                      : ''
-                  }`}
-                >
-                  <div
-                    className='text-xl font-black tracking-tight text-[#C98A2E] sm:text-2xl'
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    {s.value}
-                  </div>
-
-                  <div className='mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#77736B]'>
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          <div className='order-2 flex min-h-[430px] w-full items-center justify-center lg:min-h-[680px]'>
-            <HeroScene />
-          </div>
-        </div>
-
-        <motion.div
-          aria-hidden='true'
-          className='absolute bottom-7 left-1/2 -translate-x-1/2 text-[#77736B]'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-        >
-          <ChevronDown className='h-5 w-5 animate-bounce' />
-        </motion.div>
-      </section>
-
-      {/* TRUST STRIP */}
-      <section className='border-y border-[#DED8CE] bg-[#FBF9F5]'>
-        <div className='mx-auto grid max-w-6xl grid-cols-1 gap-0 px-6 sm:grid-cols-3'>
-          {[
-            {
-              icon: ShieldCheck,
-              title: 'Calidad verificada',
-              body: 'Revisión antes del despacho.',
-            },
-            {
-              icon: Truck,
-              title: 'Envíos nacionales',
-              body: 'Despachamos a toda Colombia.',
-            },
-            {
-              icon: Clock3,
-              title: 'Producción bajo pedido',
-              body: 'Cada compra se fabrica para ti.',
-            },
-          ].map(({ icon: Icon, title, body }, index) => (
-            <div
-              key={title}
-              className={`flex items-center gap-4 py-6 ${
-                index > 0
-                  ? 'border-[#DED8CE] sm:border-l sm:pl-8'
-                  : ''
-              } ${
-                index > 0
-                  ? 'border-t sm:border-t-0'
-                  : ''
-              }`}
-            >
-              <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
-                <Icon className='h-5 w-5' />
-              </div>
-
-              <div>
-                <div className='text-sm font-bold text-[#17191D]'>
-                  {title}
-                </div>
-
-                <div className='mt-0.5 text-sm text-[#6B6963]'>
-                  {body}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className='mx-auto max-w-7xl px-6 py-24 sm:py-28'>
-        <Reveal className='mx-auto max-w-3xl text-center'>
-          <SectionLabel>La diferencia</SectionLabel>
-
-          <SectionHeading>
-            Una lámpara debe verse bien.
-            <span className='block'>
-              También debe <Accent>sentirse bien hecha.</Accent>
-            </span>
-          </SectionHeading>
-
-          <p className='mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#66635D]'>
-            Nuestra propuesta combina diseño contemporáneo, fabricación
-            consistente y una experiencia de compra clara de principio a fin.
-          </p>
-        </Reveal>
-
-        <motion.div
-          className='mt-14 grid grid-cols-1 gap-5 md:grid-cols-3'
-          variants={stagger}
-          initial='hidden'
-          whileInView='visible'
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {FEATURES.map((feature) => {
-            const Icon = feature.icon
-
-            return (
-              <motion.article
-                key={feature.title}
-                variants={cardVariant}
-                className='group relative overflow-hidden rounded-3xl border border-[#DDD7CD] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#CFA45B] hover:shadow-[0_18px_50px_rgba(23,25,29,0.08)]'
+              <motion.h1
+                variants={rise}
+                className='max-w-2xl text-[clamp(2.75rem,7vw,5.25rem)] font-semibold leading-[1.04] tracking-[-0.03em]'
               >
-                <div className='flex items-start justify-between gap-4'>
-                  <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#17191D] text-[#F6D79D] transition-transform duration-300 group-hover:scale-105'>
-                    <Icon className='h-5 w-5' />
+                Luz que convierte
+                <span className='block text-[#96600F]'>
+                  espacios en experiencias.
+                </span>
+              </motion.h1>
+
+              <motion.p
+                variants={rise}
+                className='mt-6 max-w-xl text-[1.0625rem] leading-[1.47] text-[#6E6E73] sm:text-[1.3125rem] sm:leading-[1.38]'
+              >
+                Lámparas comerciales de alta calidad, fabricadas bajo pedido y
+                pensadas para destacar en hogares, negocios y espacios
+                profesionales.
+              </motion.p>
+
+              <motion.div
+                variants={rise}
+                className='mt-9 flex flex-col items-center gap-3 sm:flex-row'
+              >
+                <motion.div
+                  whileTap={{ scale: 0.97 }}
+                  transition={PRESS_SPRING}
+                >
+                  <Link
+                    to='/catalog'
+                    className={`group min-h-12 px-6 text-[1.0625rem] ${BTN_BASE} ${BTN_PRIMARY}`}
+                  >
+                    Ver colección
+                    <ArrowRight
+                      className='h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5'
+                      aria-hidden='true'
+                    />
+                  </Link>
+                </motion.div>
+
+                <WAButton size='lg' label='Habla con nosotros' />
+              </motion.div>
+
+              <motion.dl
+                variants={rise}
+                className='mt-12 grid w-full max-w-xl grid-cols-2 gap-x-4 gap-y-6 rounded-[28px] bg-[#F5F5F7] p-6 text-left sm:grid-cols-4'
+              >
+                {STATS.map((s) => (
+                  <div key={s.label} className='flex flex-col-reverse'>
+                    <dt className='mt-1 text-[0.8125rem] leading-snug tracking-[0.01em] text-[#6E6E73]'>
+                      {s.label}
+                    </dt>
+
+                    <dd className='text-xl font-semibold tracking-[-0.02em] text-[#96600F] sm:text-2xl'>
+                      {s.value}
+                    </dd>
+                  </div>
+                ))}
+              </motion.dl>
+            </motion.div>
+
+            <div className='order-2 flex min-h-[430px] w-full items-center justify-center lg:min-h-[680px]'>
+              <HeroScene />
+            </div>
+          </div>
+
+          <motion.div
+            aria-hidden='true'
+            className='absolute bottom-7 left-1/2 -translate-x-1/2 text-[#6E6E73]'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+          >
+            <ChevronDown className='h-5 w-5' />
+          </motion.div>
+        </section>
+
+        {/* TRUST STRIP */}
+        <section className='bg-[#F5F5F7]'>
+          <div className='mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 py-8 sm:grid-cols-3 sm:gap-8'>
+            {TRUST.map(({ icon, title, body }) => (
+              <div key={title} className='flex items-center gap-4'>
+                <IconTile icon={icon} />
+
+                <div>
+                  <div className='text-[0.9375rem] font-semibold leading-snug text-[#1D1D1F]'>
+                    {title}
                   </div>
 
-                  <span className='text-xs font-black tracking-[0.18em] text-[#B7B1A6]'>
-                    {feature.eyebrow}
-                  </span>
+                  <div className='mt-0.5 text-[0.9375rem] leading-snug text-[#6E6E73]'>
+                    {body}
+                  </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                <h3
-                  className='mt-8 text-2xl font-bold tracking-tight text-[#17191D]'
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {feature.title}
-                </h3>
-
-                <p className='mt-3 text-sm leading-7 text-[#69665F]'>
-                  {feature.body}
-                </p>
-
-                <div className='mt-7 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-[#C98A2E]'>
-                  <Check className='h-4 w-4' />
-                  Hecho para durar en tu espacio
-                </div>
-              </motion.article>
-            )
-          })}
-        </motion.div>
-      </section>
-
-      {/* PROCESS */}
-      <section className='bg-[#FBF9F5] px-6 py-24 text-[#17191D] sm:py-28'>
-        <div className='mx-auto max-w-6xl'>
-          <Reveal className='max-w-3xl'>
-            <SectionLabel>Proceso</SectionLabel>
+        {/* FEATURES */}
+        <section className='mx-auto max-w-7xl px-6 py-24 sm:py-28'>
+          <Reveal className='mx-auto max-w-3xl text-center'>
+            <SectionLabel>La diferencia</SectionLabel>
 
             <SectionHeading>
-              Compra simple.
-              <span className='block text-[#17191D]'>
-                Fabricación <Accent>cuidada.</Accent>
+              Una lámpara debe verse bien.
+              <span className='block'>
+                También debe <Accent>sentirse bien hecha.</Accent>
               </span>
             </SectionHeading>
+
+            <p className='mx-auto mt-5 max-w-2xl text-[1.0625rem] leading-[1.47] text-[#6E6E73] sm:text-xl sm:leading-[1.4]'>
+              Nuestra propuesta combina diseño contemporáneo, fabricación
+              consistente y una experiencia de compra clara de principio a fin.
+            </p>
           </Reveal>
 
           <motion.div
-            className='mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'
+            className='mt-14 grid grid-cols-1 gap-5 md:grid-cols-3'
             variants={stagger}
             initial='hidden'
             whileInView='visible'
             viewport={{ once: true, margin: '-60px' }}
           >
-            {PROCESS.map((item) => (
+            {FEATURES.map((feature) => (
               <motion.article
-                key={item.step}
-                variants={cardVariant}
-                className='rounded-3xl border border-[#DDD7CD] bg-white p-6 transition-colors duration-300 hover:border-[#CFA45B]'
+                key={feature.title}
+                variants={rise}
+                className='rounded-[28px] bg-[#F5F5F7] p-8'
               >
-                <div
-                  className='text-4xl font-black text-[#C98A2E]'
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {item.step}
-                </div>
+                <IconTile icon={feature.icon} size='lg' />
 
-                <h3
-                  className='mt-8 text-xl font-bold text-[#17191D]'
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {item.title}
+                <h3 className='mt-8 text-2xl font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'>
+                  {feature.title}
                 </h3>
 
-                <p className='mt-3 text-sm leading-6 text-[#69665F]'>
-                  {item.body}
+                <p className='mt-3 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                  {feature.body}
                 </p>
+
+                <div className='mt-7 flex items-center gap-2 text-[0.9375rem] font-medium text-[#96600F]'>
+                  <Check className='h-4 w-4' aria-hidden='true' />
+                  Hecho para durar en tu espacio
+                </div>
               </motion.article>
             ))}
           </motion.div>
-        </div>
-      </section>
+        </section>
 
-      {/* CONTACT */}
-      <section
-        id='contact'
-        className='bg-white px-6 py-24 sm:py-28'
-      >
-        <div className='mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center'>
-          <Reveal>
-            <SectionLabel>Atención directa</SectionLabel>
+        {/* PROCESS */}
+        <section className='bg-[#F5F5F7] px-6 py-24 sm:py-28'>
+          <div className='mx-auto max-w-6xl'>
+            <Reveal className='max-w-3xl'>
+              <SectionLabel>Proceso</SectionLabel>
 
-            <SectionHeading>
-              Encuentra la lámpara que
-              <span className='block'>
-                haga <Accent>especial tu espacio.</Accent>
-              </span>
-            </SectionHeading>
+              <SectionHeading>
+                Compra simple.
+                <span className='block'>
+                  Fabricación <Accent>cuidada.</Accent>
+                </span>
+              </SectionHeading>
+            </Reveal>
 
-            <p className='mt-5 max-w-xl text-base leading-7 text-[#66635D]'>
-              Explora nuestra colección o escríbenos para recibir orientación
-              sobre modelos, opciones y disponibilidad.
-            </p>
-
-            <div className='mt-8 flex flex-col gap-3 sm:flex-row'>
-              <Link
-                to='/catalog'
-                className='inline-flex items-center justify-center gap-2 rounded-full bg-[#17191D] px-6 py-3.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#30343B]'
-              >
-                Explorar lámparas
-                <ArrowRight className='h-4 w-4' />
-              </Link>
-
-              <a
-                href={WA_HREF}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='inline-flex items-center justify-center gap-2 rounded-full border border-[#BFB8AD] bg-transparent px-6 py-3.5 text-sm font-bold text-[#17191D] transition-colors duration-200 hover:border-[#17191D]'
-              >
-                <MessageCircle className='h-4 w-4' />
-                WhatsApp
-              </a>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div className='overflow-hidden rounded-3xl border border-[#DCD5CA] bg-white'>
-              <div className='border-b border-[#E7E1D7] px-6 py-5'>
-                <div className='text-xs font-bold uppercase tracking-[0.16em] text-[#A3947D]'>
-                  Servicio
-                </div>
-
-                <div
-                  className='mt-1 text-xl font-bold text-[#17191D]'
-                  style={{ fontFamily: 'var(--font-display)' }}
+            <motion.ol
+              className='mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'
+              variants={stagger}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: true, margin: '-60px' }}
+            >
+              {PROCESS.map((item) => (
+                <motion.li
+                  key={item.step}
+                  variants={rise}
+                  className='rounded-[28px] bg-white p-7'
                 >
-                  Compra con confianza
+                  <div className='text-4xl font-semibold tracking-[-0.025em] text-[#96600F]'>
+                    {item.step}
+                  </div>
+
+                  <h3 className='mt-8 text-xl font-semibold leading-[1.2] tracking-[-0.01em] text-[#1D1D1F]'>
+                    {item.title}
+                  </h3>
+
+                  <p className='mt-3 text-[0.9375rem] leading-[1.5] text-[#6E6E73]'>
+                    {item.body}
+                  </p>
+                </motion.li>
+              ))}
+            </motion.ol>
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section id='contact' className='bg-white px-6 py-24 sm:py-28'>
+          <div className='mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center'>
+            <Reveal>
+              <SectionLabel>Atención directa</SectionLabel>
+
+              <SectionHeading>
+                Encuentra la lámpara que
+                <span className='block'>
+                  haga <Accent>especial tu espacio.</Accent>
+                </span>
+              </SectionHeading>
+
+              <p className='mt-5 max-w-xl text-[1.0625rem] leading-[1.47] text-[#6E6E73] sm:text-xl sm:leading-[1.4]'>
+                Explora nuestra colección o escríbenos para recibir orientación
+                sobre modelos, opciones y disponibilidad.
+              </p>
+
+              <div className='mt-8 flex flex-col gap-3 sm:flex-row'>
+                <motion.div
+                  className='flex'
+                  whileTap={{ scale: 0.97 }}
+                  transition={PRESS_SPRING}
+                >
+                  <Link
+                    to='/catalog'
+                    className={`group w-full min-h-12 px-6 text-[1.0625rem] ${BTN_BASE} ${BTN_PRIMARY}`}
+                  >
+                    Explorar lámparas
+                    <ArrowRight
+                      className='h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5'
+                      aria-hidden='true'
+                    />
+                  </Link>
+                </motion.div>
+
+                <motion.a
+                  href={WA_HREF}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={`min-h-12 px-6 text-[1.0625rem] ${BTN_BASE} ${BTN_SECONDARY}`}
+                  whileTap={{ scale: 0.97 }}
+                  transition={PRESS_SPRING}
+                >
+                  <MessageCircle className='h-4 w-4' aria-hidden='true' />
+                  WhatsApp
+                </motion.a>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.12}>
+              <div className='overflow-hidden rounded-[28px] bg-[#F5F5F7]'>
+                <div className='px-6 pb-4 pt-6'>
+                  <div className='text-[0.9375rem] font-medium text-[#6E6E73]'>
+                    Servicio
+                  </div>
+
+                  <div className='mt-1 text-2xl font-semibold leading-[1.15] tracking-[-0.015em] text-[#1D1D1F]'>
+                    Compra con confianza
+                  </div>
+                </div>
+
+                <div className='mx-6 divide-y divide-black/[0.06] pb-2'>
+                  {SERVICES.map(({ icon, title, body }) => (
+                    <div key={title} className='flex gap-4 py-5'>
+                      <IconTile icon={icon} />
+
+                      <div>
+                        <div className='text-[0.9375rem] font-semibold leading-snug text-[#1D1D1F]'>
+                          {title}
+                        </div>
+
+                        <div className='mt-1 text-[0.9375rem] leading-[1.45] text-[#6E6E73]'>
+                          {body}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            </Reveal>
+          </div>
+        </section>
 
-              <div className='divide-y divide-[#EEE9E1]'>
-                {[
-                  {
-                    icon: ShieldCheck,
-                    title: 'Control de calidad',
-                    body: 'Revisamos cada unidad antes del despacho.',
-                  },
-                  {
-                    icon: PackageCheck,
-                    title: 'Empaque cuidado',
-                    body: 'Preparamos tu lámpara para un traslado seguro.',
-                  },
-                  {
-                    icon: Truck,
-                    title: 'Envíos nacionales',
-                    body: 'Despachos disponibles dentro de Colombia.',
-                  },
-                ].map(({ icon: Icon, title, body }) => (
-                  <div
-                    key={title}
-                    className='flex gap-4 px-6 py-5'
-                  >
-                    <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#17191D] text-[#F6D79D]'>
-                      <Icon className='h-4.5 w-4.5' />
-                    </div>
-
-                    <div>
-                      <div className='text-sm font-bold text-[#17191D]'>
-                        {title}
-                      </div>
-
-                      <div className='mt-1 text-sm leading-6 text-[#726E67]'>
-                        {body}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      <WhatsAppFAB />
-    </div>
+        <WhatsAppFAB />
+      </div>
+    </MotionConfig>
   )
 }
